@@ -20,3 +20,8 @@ ID = "Your_Site_ID"
 [context.branch-deploy.environment]
   HUGO_VERSION = "0.56"
 
+[[redirects]]
+  from = "https://flamboyant-kepler-ae031d.netlify.com/*"
+  to = "https://www.seantallen.com/:splat"
+  status = 301
+  force = true
