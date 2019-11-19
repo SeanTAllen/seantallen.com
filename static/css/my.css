@@ -1,0 +1,24 @@
+.tag {
+  display: inline-block;
+  float: left;
+  margin-right: 12px;
+}
+
+.note,
+.warning {
+  border-left-width: 4px;
+  border-left-style: solid;
+  position: relative;
+  border-color: var(--primary-color);
+  display: block;
+}
+
+.admonition-content {
+  display: block;
+  margin: 0px;
+  padding: .125em 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  overflow-x: auto;
+  background-color: var(--black-05);
+}
