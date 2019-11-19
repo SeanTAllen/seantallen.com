@@ -8,6 +8,9 @@ preserveTaxonomyNames = true
 [params]
   custom_css = ["css/my.css"]
   background_color_class = "bg-blue"
+  twitter = "https://twitter.com/seantallen"
+  github = "https://github.com/seantallen"
+  linkedin = "https://www.linkedin.com/in/seantallen/"
 
 [taxonomies]
   tag = "tags"
