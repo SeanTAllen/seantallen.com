@@ -3,7 +3,6 @@ languageCode = "en-us"
 title = "www.seantallen.com"
 theme = "ananke"
 canonifyurls = false
-preserveTaxonomyNames = true
 
 [params]
   custom_css = ["css/my.css"]
