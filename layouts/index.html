@@ -9,7 +9,7 @@
       {{ range $key, $value := .Site.Taxonomies.tags }}
         <h2 class="f1">
           <a href="{{ "/tags" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}" class="link blue hover-black">
-            {{ $key | humanize }}
+            {{ $key | humanize | title }}
           </a>
         </h2>
         {{ range $value.Pages }}

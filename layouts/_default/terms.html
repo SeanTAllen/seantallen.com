@@ -10,7 +10,7 @@
       {{ range $key, $value := .Data.Terms }}
         <h2 class="f1">
           <a href="{{ "/" | relLangURL }}{{ $.Data.Plural | urlize }}/{{ $key | urlize }}" class="link blue hover-black">
-            {{ $key | humanize }}
+            {{ $key | humanize | title }}
           </a>
         </h2>
         {{ range $value.Pages }}
