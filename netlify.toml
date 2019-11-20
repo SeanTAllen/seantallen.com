@@ -25,3 +25,39 @@ ID = "Your_Site_ID"
   to = "https://www.seantallen.com/:splat"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/2018/12/26/things-id-like-in-my-code-management-tool/"
+  to = "/posts/code-management-wishlist/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2016/02/22/learning-from-ada/"
+  to = "/posts/learning-from-ada/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2015/04/19/of-debt-and-decisions/"
+  to = "/posts/of-debt-and-decisions/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2015/04/12/on-becoming-a-better-teacher/"
+  to = "/posts/on-becoming-a-better-teacher/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2015/04/04/storm-applied-behind-the-scenes/"
+  to = "/posts/storm-applied/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2015/02/24/an-acceptable-tool/"
+  to = "/posts/an-acceptable-tool/"
+  status = 301
+  force = true

@@ -21,7 +21,7 @@ I cover hard-won knowledge about using Cgo in performance sensitive code includi
 * [Wallaroo](https://github.com/wallaroolabs/wallaroo)
 * [Wallaroo Labs' Twitter](https://twitter.com/wallaroolabs)
 * [My Twitter](https://twitter.com/seantallen)
-* [My Personal Website](https://www.monkeysnatchbanana.com/)
+* [My Personal Website](https://www.seantallen.com/)
 * [Pony](https://www.ponylang.org/)
 * [Pony Twitter](https://twitter.com/ponylang)
 

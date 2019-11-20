@@ -25,7 +25,7 @@ Sean T. Allen explains what makes Pony different from other languages, the types
 * [Pony](https://www.ponylang.org/)
 * [Pony Twitter](https://twitter.com/ponylang)
 * [My Twitter](https://twitter.com/seantallen)
-* [My Personal Website](https://www.monkeysnatchbanana.com/)
+* [My Personal Website](https://www.seantallen.com/)
 * [Wallaroo](https://github.com/wallaroolabs/wallaroo)
 * [Wallaroo Labs' Twitter](https://twitter.com/wallaroolabs)
 

@@ -10,7 +10,7 @@ Pat Helland and Me: How to build stateful distributed applications that can scal
 
 ## Abstract
 
-In 2007, Pat Helland published [“Life Beyond Distributed Transactions: An Apostate’s Opinion”](https://queue.acm.org/detail.cfm?id=3025012) in which he conducts a thought experiment on how to design a distributed database that can scale almost infinitely. While the paper explicitly addresses distributed database design, [Sean T. Allen](https://www.monkeysnatchbanana.com/) shows that the ideas are far more widely applicable, particularly in scaling stateful applications. Sean explores some of Helland’s ideas through practical examples from his experience building data processing systems using tools like Apache Storm and, more recently, developing a stateful distributed stream processor at [Wallaroo Labs](https://www.wallaroolabs.com/).
+In 2007, Pat Helland published [“Life Beyond Distributed Transactions: An Apostate’s Opinion”](https://queue.acm.org/detail.cfm?id=3025012) in which he conducts a thought experiment on how to design a distributed database that can scale almost infinitely. While the paper explicitly addresses distributed database design, [Sean T. Allen](https://www.seantallen.com/) shows that the ideas are far more widely applicable, particularly in scaling stateful applications. Sean explores some of Helland’s ideas through practical examples from his experience building data processing systems using tools like Apache Storm and, more recently, developing a stateful distributed stream processor at [Wallaroo Labs](https://www.wallaroolabs.com/).
 
 ## Versions of this talk
 
@@ -28,7 +28,7 @@ If you are only going to watch one version of this talk, I'd advice watching the
 * [Wallaroo](https://github.com/wallaroolabs/wallaroo)
 * [Wallaroo Labs' Twitter](https://twitter.com/wallaroolabs)
 * [My Twitter](https://twitter.com/seantallen)
-* [My Personal Website](https://www.monkeysnatchbanana.com/)
+* [My Personal Website](https://www.seantallen.com/)
 * [Pony](https://www.ponylang.org/)
 * [Pony Twitter](https://twitter.com/ponylang)
 * [Pat Helland's Twitter](https://twitter.com/pathelland)
@@ -41,7 +41,7 @@ If you are only going to watch one version of this talk, I'd advice watching the
 * [CRDT Primer](http://jtfmumm.com/blog/2015/11/17/crdt-primer-1-defanging-order-theory/)
 * [Silence is Golden: Coordination-Avoiding Systems Design](https://www.youtube.com/watch?v=EYJnWttrC9k)
 * [CAP Twelve Years Later: How the "Rules" Have Changed](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed)
-* [How did I get here? Building Confidence in a Distributed Stream Processor](https://www.monkeysnatchbanana.com/2016/11/22/codemeshio-how-did-i-get-here/)
+* [How did I get here? Building Confidence in a Distributed Stream Processor](/talks/how-did-i-get-here/)
 * [Wallaroo Scale-Independent Computing](https://vimeo.com/270509076)
 * [How We Built Wallaroo to Process Millions of Messages/Sec with Microsecond Latencies](https://blog.wallaroolabs.com/2018/02/how-we-built-wallaroo-to-process-millions-of-messages/sec-with-microsecond-latencies/)
 * [Random Slicing: Efficient and Scalable Data Placement for

@@ -25,7 +25,12 @@ canonifyurls = false
 
 [menu]
   [[menu.main]]
-    name = "talks"
+    name = "Posts"
+    url = "/posts/"
+    weight = -110
+
+  [[menu.main]]
+    name = "Talks"
     url = "/talks/"
     weight = -100
 
