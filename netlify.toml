@@ -8,7 +8,7 @@ ID = "Your_Site_ID"
 [build]
   base = ""
   publish = "public/"
-  command = "hugo"
+  command = "bash build.bash"
 
 # Have to set HUGO_VERSION for each environment otherwise we get the 0.17 default
 [context.production.environment]
