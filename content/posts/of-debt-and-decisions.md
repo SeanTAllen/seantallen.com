@@ -4,7 +4,7 @@ date: "2015-04-19T11:09:15-05:00"
 title: "Of Debt and Decisions"
 tags: ["Technical Debt"]
 slug: "of-debt-and-decisions"
-description: "Technical debt; maybe not so bad..."
+description: "Technical debt; maybe not so bad."
 ---
 
 Back in the salad days of the 1990's, I was working at a company that was building the hot product of the day: an intranet. Every company wanted an intranet. We'd built several for different client before deciding to create a white-label intranet that would be the delight of all our customers. Give us some money and we'd give you a themed intranet with calendaring, project tracking, task management and more.
