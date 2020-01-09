@@ -29,4 +29,5 @@ In this talk, Sean T. Allen (member of the Pony core team) explains Deny Capabil
 * [Coordination Avoidance in Database Systems](http://www.vldb.org/pvldb/vol8/p185-bailis.pdf)
 * [Silence is Golden: Coordination-Avoiding Systems Design](https://www.youtube.com/watch?v=EYJnWttrC9k)
 * [Race Condition vs. Data Race](https://blog.regehr.org/archives/490)
+* [RWMutex scales poorly with CPU count](https://github.com/golang/go/issues/17973)
 * [The wide world of almost-actors: comparing Pony to BEAM languages](https://www.youtube.com/watch?v=_0m0_qtfzLs)
