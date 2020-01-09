@@ -14,7 +14,7 @@ In this talk, Sean T. Allen (member of the Pony core team) explains Deny Capabil
 
 ## Versions of this talk
 
-* Papers We Love NYC 2020- [Slides](https://gitpitch.com/SeanTAllen/on-deny-capabilities/)
+* Papers We Love NYC January 8, 2020 - [Slides](https://gitpitch.com/SeanTAllen/on-deny-capabilities/)
 
 ## Links
 
