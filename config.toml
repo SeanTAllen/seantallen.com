@@ -34,3 +34,8 @@ canonifyurls = false
     url = "/talks/"
     weight = -100
 
+  [[menu.main]]
+    name = "Interviews"
+    url = "/interviews/"
+    weight = -90
+
