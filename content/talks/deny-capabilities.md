@@ -1,7 +1,7 @@
 ---
 title: "On Deny Capabilities for Safe, Fast Actors"
 slug: "deny-capabilities"
-date: 2020-01-01T00:00:00-04:00
+date: 2020-01-08T00:00:00-04:00
 draft: false
 tags: [Pony, Scaling]
 description: "How Pony combines Deny Capabilities with an actor-based model to provide data-race freedom and fearless concurrency."
