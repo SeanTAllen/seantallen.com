@@ -27,15 +27,19 @@ canonifyurls = false
   [[menu.main]]
     name = "Posts"
     url = "/posts/"
-    weight = -110
+    weight = -100
 
   [[menu.main]]
     name = "Talks"
     url = "/talks/"
-    weight = -100
+    weight = -110
 
   [[menu.main]]
     name = "Interviews"
     url = "/interviews/"
     weight = -90
 
+  [[menu.main]]
+    name = "Panels"
+    url = "/panels/"
+    weight = -80
