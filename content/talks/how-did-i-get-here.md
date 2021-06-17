@@ -15,7 +15,8 @@ Sean T. Allen talks about the various means his team has come up with to create 
 ## Versions of this talk
 
 * CodeMesh 2016 - [Slides](https://speakerdeck.com/seantallen/how-did-i-get-here-building-confidence-in-a-distributed-stream-processor-1) | [Video](https://www.youtube.com/watch?v=6MsPDtpe2tg&index=3&list=PLWbHc_FXPo2hGJHXhpgqDU-P4BArpCdh6)
-* QCon 2016 - [Slides](https://speakerdeck.com/seantallen/how-did-i-get-here-building-confidence-in-a-distributed-stream-processor) | [Video]((https://www.infoq.com/presentations/trust-distributed-systems)
+* QCon 2016 - [Slides](https://speakerdeck.com/seantallen/how-did-i-get-here-building-confidence-in-a-distributed-stream-processor) | [Video](https://www.infoq.com/presentations/trust-distributed-systems)
+
 ## Links
 
 ### Peter Alvaro
