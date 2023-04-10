@@ -42,3 +42,8 @@ canonifyurls = false
     name = "Panels"
     url = "/panels/"
     weight = -80
+
+  [[menu.main]]
+    name = "Papers"
+    url = "/papers/"
+    weight = -70
