@@ -25,7 +25,7 @@ A couple of examples of how this played out:
 
 * Chapter 5 includes a 12 page review of the Storm UI. It's very straight-forward. Lots of screenshots calling out and highlighting certain parts of different screens saying ”and this important bit is…”.
 
-![Example Storm UI screenshot from Storm Applied](/content/images/2015/04/Storm-UI-Figure-from-Storm-Applied.png)
+![Example Storm UI screenshot from Storm Applied](/img/post/on-becoming-a-better-teacher/Storm-UI-Figure-from-Storm-Applied.png)
 
 For some people, this might be redundant and seem pointless. An otherwise glowing review of [Storm Applied on Amazon](http://www.amazon.com/Storm-Applied-Strategies-real-time-processing/dp/1617291897/ref=sr_1_1) includes the following:
 

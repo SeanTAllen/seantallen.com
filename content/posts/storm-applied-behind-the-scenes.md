@@ -21,7 +21,7 @@ I don't remember now what I envisioned the book being when we first signed the c
 * I spent WAY TOO MUCH TIME trying to work lines from [this scene](https://www.youtube.com/watch?v=5A0-u85aAYg) into the book.
 * Manning googled an Eleanor Roosevelt quote and made us change the attribution to "misquoted".
 
-![Pretty sure Eleanor Roosevelt did say this](/content/images/2015/04/misquoted.png)
+![Pretty sure Eleanor Roosevelt did say this](/img/post/storm-applied-behind-the-scenes/misquoted.png)
 
 * Most of the content I wrote was written using [Write Room](http://www.hogbaysoftware.com/products/writeroom). Full screen; no distractions = Awesome. Then Matt turned it into a "Manning usable" format because...
 * Manning uses MS Word for manuscripts. I managed to get through the entire book without really knowing how to use Word thanks to Matt.
