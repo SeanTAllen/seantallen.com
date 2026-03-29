@@ -1,0 +1,9 @@
+languageCode = "en-us"
+title = "www.seantallen.com"
+
+[params.author]
+  name = "Sean T. Allen"
+  links = [
+    { github = "https://github.com/seantallen" },
+    { linkedin = "https://www.linkedin.com/in/sean-t-allen-has-a-posse/" },
+  ]

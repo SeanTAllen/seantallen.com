@@ -1,0 +1,16 @@
+[goldmark.extensions]
+  linkify = false
+
+[goldmark.renderer]
+  unsafe = true
+
+[goldmark.parser]
+  [goldmark.parser.attribute]
+    block = true
+
+[highlight]
+  noClasses = false
+
+[tableOfContents]
+  startLevel = 2
+  endLevel = 4
