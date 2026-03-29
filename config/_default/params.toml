@@ -1,0 +1,41 @@
+colorScheme = "fire"
+Logo = "logo.png"
+disableTextInHeader = true
+defaultAppearance = "light"
+autoSwitchAppearance = true
+enableSearch = false
+enableCodeCopy = true
+mainSections = ["posts", "talks", "interviews", "panels", "papers"]
+
+[header]
+  layout = "basic"
+
+[footer]
+  showCopyright = false
+  showThemeAttribution = false
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  layout = "hero"
+  homepageImage = "img/homepage.png"
+  showRecent = true
+  showRecentItems = 10
+
+[article]
+  showHero = true
+  heroStyle = "big"
+  showDate = true
+  showAuthor = false
+  showReadingTime = true
+  showRelatedContent = true
+  relatedContentLimit = 3
+  showTaxonomies = true
+  showPagination = true
+  showBreadcrumbs = true
+  showHeadingAnchors = true
+
+[list]
+  showSummary = true
+  groupByYear = true
+  cardView = false

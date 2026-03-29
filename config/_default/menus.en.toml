@@ -1,0 +1,36 @@
+[[main]]
+  name = "Talks"
+  pageRef = "talks"
+  weight = 10
+
+[[main]]
+  name = "Posts"
+  pageRef = "posts"
+  weight = 20
+
+[[main]]
+  name = "Interviews"
+  pageRef = "interviews"
+  weight = 30
+
+[[main]]
+  name = "Panels"
+  pageRef = "panels"
+  weight = 40
+
+[[main]]
+  name = "Papers"
+  pageRef = "papers"
+  weight = 50
+
+[[main]]
+  identifier = "github"
+  pre = "github"
+  url = "https://github.com/seantallen"
+  weight = 60
+
+[[main]]
+  identifier = "linkedin"
+  pre = "linkedin"
+  url = "https://www.linkedin.com/in/sean-t-allen-has-a-posse/"
+  weight = 70

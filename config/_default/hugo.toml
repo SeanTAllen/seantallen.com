@@ -1,0 +1,19 @@
+baseURL = "https://www.seantallen.com/"
+theme = "blowfish"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+
+[taxonomies]
+  tag = "tags"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[related]
+  threshold = 80
+  includeNewer = true
+  toLower = false
+
+[[related.indices]]
+  name = "tags"
+  weight = 100
