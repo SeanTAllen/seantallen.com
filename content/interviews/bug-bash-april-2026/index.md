@@ -1,6 +1,6 @@
 ---
 title: "Why Simple Workloads Find the Hardest Bugs"
-tags: ["Testing"]
+tags: ["Testing", "Antithesis"]
 slug: "why-simple-workloads-find-the-hardest-bugs"
 draft: false
 date: "2026-04-08T07:00:00-05:00"
