@@ -6,7 +6,7 @@ draft: false
 tags: ["LLM", "Ensemble Method"]
 description: "Why every ensemble of fixed-lens personas needs one deliberately unconstrained reviewer."
 summary: "Every good team needs its wildcard."
-imagePosition: "center 37.5%"
+imagePosition: "center 35.5%"
 ---
 
 Like most American men of my age, I spent my middle school years watching the A-Team. I loved how suave and confident Faceman was. Hannibal always pulled an incredible plan out of his ass and finished every episode looking cool with that victory cigar in his mouth. And B.A.? Mr. T was so damn cool that you couldn't help but root for Clubber Lang to beat the shit out of Rocky. And then there was Murdock. I didn't really pay much mind to Murdock. He was just there as the 4th character that was just kind of there. Was he supposed to be comic relief? I guess. If he was, it didn't land for me.
