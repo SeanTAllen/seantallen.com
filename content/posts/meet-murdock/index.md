@@ -6,7 +6,7 @@ draft: false
 tags: ["LLM", "Ensemble Method"]
 description: "Why every ensemble of fixed-lens personas needs one deliberately unconstrained reviewer."
 summary: "Every good team needs its wildcard."
-imagePosition: "center 35.5%"
+imagePosition: "center 33.5%"
 ---
 
 Like most American men of my age, I spent my middle school years watching the A-Team. I loved how suave and confident Faceman was. Hannibal always pulled an incredible plan out of his ass and finished every episode looking cool with that victory cigar in his mouth. And B.A.? Mr. T was so damn cool that you couldn't help but root for Clubber Lang to beat the shit out of Rocky. And then there was Murdock. I didn't really pay much mind to Murdock. He was just there as the 4th character that was just kind of there. Was he supposed to be comic relief? I guess. If he was, it didn't land for me.
@@ -25,11 +25,11 @@ That's the baseline. If that's all new to you, Agentic Personae has the full set
 
 ## Meet Murdock
 
-The wildcard is a persona too, but it's the only one without a fixed lens. It gets the same artifact as the specialists, and it gets the identity statements of every other persona running on the task. Not so it can coordinate with them. So it knows what territory is already covered and can avoid it.
+The wildcard's instructions start like this:
 
-Then it's told to look elsewhere.
+> You are the chaos agent. The other 7 personas have fixed lenses — they see what their principles tell them to look for. You have no fixed lens. Your job is to find what they will all miss: the weird, the novel, the thing that doesn't fit any category but matters anyway. You are given descriptions of the other personas so you know what territory is already covered. Look elsewhere.
 
-The wildcard is permitted to question the premise that the other personas accept. Correctness assumes the change is trying to do the right thing and checks whether it does it right. The wildcard can ask whether we're doing the right thing at all. It's permitted to report vague signals — things like "this feels off, here's my best attempt at why." The other personas produce articulate, categorized findings. The wildcard sometimes produces half-articulated instincts. That's by design.
+The rest of the instructions grant two permissions that the opening doesn't quite cover. The wildcard can question the premise the other personas accept. Correctness assumes the change is trying to do the right thing and checks whether it does it right. The wildcard can ask whether we're doing the right thing at all. It can also report vague signals. Things like "this feels off, here's my best attempt at why." The other personas produce articulate, categorized findings. The wildcard sometimes produces half-articulated instincts. That's by design.
 
 So that's what the wildcard is. Now for the part I actually care about.
 
