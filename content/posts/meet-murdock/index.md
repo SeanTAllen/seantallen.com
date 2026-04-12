@@ -6,6 +6,7 @@ draft: false
 tags: ["LLM", "Ensemble Method"]
 description: "Why every ensemble of fixed-lens personas needs one deliberately unconstrained reviewer."
 summary: "Every good team needs its wildcard."
+imagePosition: "center 25%"
 ---
 
 Like most American men of my age, I spent my middle school years watching the A-Team. I loved how suave and confident Faceman was. Hannibal always pulled an incredible plan out of his ass and finished every episode looking cool with that victory cigar in his mouth. And B.A.? Mr. T was so damn cool that you couldn't help but root for Clubber Lang to beat the shit out of Rocky. And then there was Murdock. I didn't really pay much mind to Murdock. He was just there as the 4th character that was just kind of there. Was he supposed to be comic relief? I guess. If he was, it didn't land for me.
@@ -18,7 +19,7 @@ Murdock is a wildcard. And he was the inspiration for my favorite LLM persona th
 
 ## Agentic Personae Redux
 
-In [Agentic Personae]({{< ref "agentic-personae" >}}), I wrote about building persona sets for recurring LLM tasks like code review, design, and test planning. Each persona has a fixed lens. The Correctness reviewer traces code forward, following each branch and error path to verify the code does what it claims. The Adversarial reviewer works the other direction, starting from "what would a bad outcome look like?" and constructing a concrete scenario that produces it. The Security reviewer thinks in terms of trust boundaries, watching every place untrusted data meets trusted code. The Tests reviewer applies counterfactual thinking: if the code under test were broken in the way this test targets, would the assertion fire? Same artifact, different modes of thought. Each persona does a first pass independently, the synthesizer combines them, and the result covers ground no single pass reaches.
+In [Agentic Personae]({{< ref "agentic-personae" >}}), I wrote about building persona sets for recurring LLM tasks like code review, design, and test planning. Each persona has a fixed lens. The Correctness reviewer traces code forward, following each branch and error path to verify the code does what it claims. The Adversarial reviewer works the other direction, starting from "what would a bad outcome look like?" and constructing a concrete scenario that produces it. The Security reviewer thinks in terms of trust boundaries, watching every place untrusted data meets trusted code. The Tests reviewer applies counterfactual thinking: if the code under test were broken in the way this test targets, would the assertion fire? Same artifact, different modes of thought. Each persona does a first pass independently, a synthesizer combines them, and the result covers ground no single pass reaches.
 
 That's the baseline. If that's all new to you, Agentic Personae has the full setup. For this post, all you need is the idea that a persona is a specialist with a fixed lens.
 
