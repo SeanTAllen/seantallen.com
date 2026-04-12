@@ -51,4 +51,4 @@ Fair trade. You know each episode what you're getting from Hannibal and Faceman 
 
 ## Oh, and one more thing
 
-I always thought it was Murdoch. It wasn't until I went to write this post that I learned it's Murdock. Stupid internet. Ruining everything again.
+I always thought it was Murdoch. It wasn't until I went to write this post that I learned it's Murdock. Murdoch with an 'h' is objectively better than Murdock with a 'k'. Stupid internet. Ruining everything again.
