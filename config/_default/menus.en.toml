@@ -34,3 +34,15 @@
   pre = "linkedin"
   url = "https://www.linkedin.com/in/sean-t-allen-has-a-posse/"
   weight = 70
+
+[[main]]
+  identifier = "x-twitter"
+  pre = "x-twitter"
+  url = "https://x.com/seantallen"
+  weight = 80
+
+[[main]]
+  identifier = "bluesky"
+  pre = "bluesky"
+  url = "https://bsky.app/profile/seantallen.bsky.social"
+  weight = 90
