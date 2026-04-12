@@ -1,0 +1,285 @@
+/*
+ * GC Made Fast — Custom Theme
+ *
+ * Visual identity: Ren & Stimpy / R. Crumb underground comics
+ * Palette derived from the cover image (orca in a speed frenzy)
+ *
+ *   --bg-dark:      #1a1a1a   (deep black, main background)
+ *   --accent-red:   #cc2222   (stock car red, primary accent)
+ *   --accent-yellow: #ffd700  (speed lines yellow, secondary accent)
+ *   --accent-blue:  #5b9bd5   (sky blue, tertiary / quotes)
+ *   --neutral-tan:  #d4b896   (road/ground, muted text)
+ *   --text-white:   #f0f0f0   (body text)
+ */
+
+:root {
+  --bg-dark: #1a1a1a;
+  --accent-red: #cc2222;
+  --accent-yellow: #ffd700;
+  --accent-blue: #5b9bd5;
+  --neutral-tan: #d4b896;
+  --text-white: #f0f0f0;
+}
+
+/* ── Base ── */
+
+.reveal {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 42px;
+  color: var(--text-white);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 40px 60px;
+}
+
+/* ── Headings ── */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: var(--accent-yellow);
+}
+
+.reveal h1 {
+  font-size: 2.8em;
+}
+
+.reveal h2 {
+  font-size: 2em;
+}
+
+.reveal h3 {
+  font-size: 1.4em;
+}
+
+/* ── Section divider slides ── */
+
+.reveal .slides section.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.reveal .slides section.divider h1,
+.reveal .slides section.divider h2 {
+  color: var(--text-white);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* ── Big statement slides ── */
+
+.reveal .slides section.big-statement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.reveal .slides section.big-statement h2 {
+  font-size: 2.5em;
+  color: var(--accent-blue);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.reveal .slides section.big-statement .highlight {
+  color: var(--accent-red);
+}
+
+/* ── Quote slides ── */
+
+.reveal .slides section.quote-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--accent-blue);
+}
+
+.reveal .slides section.quote-slide blockquote {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  font-size: 1.4em;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--text-white);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  padding: 0 40px;
+  max-width: 90%;
+}
+
+.reveal .slides section.quote-slide .attribution {
+  margin-top: 0.8em;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--bg-dark);
+}
+
+/* ── Content slides — two-column ── */
+
+.two-col {
+  display: flex;
+  gap: 2em;
+  align-items: flex-start;
+  margin-top: 0.5em;
+}
+
+.two-col .col-text {
+  flex: 1;
+}
+
+.two-col .col-image {
+  flex: 1;
+  text-align: center;
+}
+
+.two-col .col-image img {
+  max-width: 100%;
+  border: 4px solid var(--accent-yellow);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* ── Bullet lists ── */
+
+.reveal ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.reveal ul li {
+  padding: 0.3em 0;
+  font-size: 0.85em;
+  color: var(--text-white);
+}
+
+.reveal ul li::before {
+  content: "\25B6";
+  color: var(--accent-red);
+  font-size: 0.7em;
+  margin-right: 0.5em;
+}
+
+/* ── Horizontal rule under headings ── */
+
+.reveal hr {
+  border: none;
+  border-top: 4px solid var(--accent-red);
+  margin: 0.3em 0 0.6em 0;
+  width: 100%;
+}
+
+/* ── Title slide ── */
+
+.reveal .slides section.title-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  padding: 0;
+  background-color: var(--bg-dark);
+}
+
+.title-slide .cover-image {
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border: none;
+  box-shadow: none;
+}
+
+.title-slide .title-text {
+  background-color: var(--accent-red);
+  width: 100%;
+  padding: 30px 60px;
+  margin: 0;
+}
+
+.title-slide .title-text h1 {
+  color: var(--accent-yellow);
+  font-size: 2.5em;
+  margin: 0;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.title-slide .title-text p {
+  color: var(--neutral-tan);
+  font-size: 0.7em;
+  margin: 0.2em 0 0 0;
+  font-style: italic;
+}
+
+/* ── Speech bubble callout (Data Corrupting style) ── */
+
+.callout {
+  background-color: var(--accent-yellow);
+  color: var(--bg-dark);
+  padding: 30px 40px;
+  border-radius: 8px;
+  position: relative;
+  font-family: 'Impact', 'Arial Narrow', sans-serif;
+  font-size: 1.3em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.callout::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: 60px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid var(--accent-yellow);
+}
+
+.callout-attribution {
+  text-align: right;
+  margin-top: 1.2em;
+  font-size: 0.6em;
+  color: var(--neutral-tan);
+}
+
+/* ── Title slide quote ── */
+
+section.has-quote::after {
+  content: '"America is all about speed.\AHot,\Anasty,\Abad-ass\Aspeed."\A\A— Eleanor Roosevelt';
+  white-space: pre;
+  position: absolute;
+  bottom: 30px;
+  right: 40px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 18px;
+  font-style: italic;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── Fragment visibility ── */
+
+.reveal .fragment {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+  visibility: visible;
+}

@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GC Made Fast</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+  <div class="reveal">
+    <div id="title-quote" style="position: absolute; top: 30px; right: 40px; color: #f0f0f0; font-weight: bold; font-size: 18px; font-style: italic; text-align: right; line-height: 1.4; z-index: 100; pointer-events: none;">"America is all about speed.<br>Hot, nasty, bad-ass speed."<br>— Eleanor Roosevelt</div>
+    <div class="slides">
+
+      <!-- Title slide -->
+      <section data-background-image="images/cover.png" data-background-size="cover" data-background-position="center">
+        <h1 style="position: absolute; top: -380px; left: 40px; color: var(--accent-yellow); font-size: 2em; text-shadow: 4px 4px 0 rgba(0,0,0,0.6); margin: 0;">GC Made Fast</h1>
+      </section>
+
+      <!-- About me -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text">
+            <h2>Sean T Allen</h2>
+            <p style="font-size: 0.6em; color: var(--neutral-tan); margin: 0;"><a href="https://www.seantallen.com" style="color: var(--neutral-tan); text-decoration: none;">www.seantallen.com</a></p>
+            <hr>
+            <ul>
+              <li>Engineer @ Antithesis</li>
+              <li>Member of the Pony core team</li>
+              <li>Message Passing Devotee</li>
+              <li>Ricky Bobby Apostle</li>
+            </ul>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/about-me.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GC Made Fast - Pony intro -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text">
+            <h2 style="text-align: center;">GC Made Fast</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/pony.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          This is a talk about Pony (more on Pony), and going fast, and garbage collection.
+
+          Really this is a talk about message passing.
+        </aside>
+      </section>
+
+      <!-- Most engineers I know -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text">
+            <h2 style="text-align: center;">Most Engineers I Know</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/slow-gc.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Most people don't think GC and fast. Most engineers I know think GC is slow and I can't blame them. Most of them experience GC as stop-the-world GC. And that gives you an experience like...
+        </aside>
+      </section>
+
+      <!-- Latency chaos -->
+      <section data-background-image="images/latency.png" data-background-size="100% 75%" data-background-position="center" data-background-color="#1a1a1a">
+        <aside class="notes">
+          With a stop-the-world garbage collector you get nasty latency spikes that can destroy the stability of your system.
+        </aside>
+      </section>
+
+      <!-- Section: The Message Passing Bet -->
+      <section data-background-color="#1a1a1a" style="padding: 0;">
+        <div style="display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">The</p>
+          <h1 style="color: var(--accent-blue); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0 0.2em;">Message Passing</h1>
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">Bet</p>
+        </div>
+      </section>
+
+      <!-- Shared State vs Message Passing -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text">
+            <h2 style="text-align: center;">Message Passing<br><span style="color: var(--accent-blue);">scales better than</span><br>Shared State</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/shared-vs-message.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Shared state vs. message passing is an old argument (micro-kernel vs monolithic), and I'm firmly in the message-passing camp.
+
+          But why? Not because message passing is inherently fast — it's because it enables something deeper.
+        </aside>
+      </section>
+
+      <!-- Coordination kills performance -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2 style="margin: 0;"><span style="color: var(--accent-yellow);">Coordination</span><br><span style="color: var(--accent-red);">Kills</span><br><span style="color: var(--accent-yellow);">Performance</span></h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/coordination.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          "Silence is Golden" / Helland's "Life Beyond Distributed Transactions": the fastest coordination is no coordination. The best way to go fast is to do as much as possible with local knowledge alone.
+
+          Message passing serves this: actors communicate to share information, but they don't need to coordinate to *act* on that information. Gossip, not consensus.
+        </aside>
+      </section>
+
+      <!-- Act locally, gossip globally -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2 style="margin: 0; color: var(--accent-yellow);">Act Locally</h2>
+            <h2 class="fragment" style="margin: 0.3em 0 0 0; color: var(--accent-blue);">Gossip Globally</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/act-local-gossip.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          This principle — act locally, gossip globally — turns out to apply all the way down to memory management.
+        </aside>
+      </section>
+
+      <!-- Section divider -->
+      <section data-background-color="#1a1a1a" style="padding: 0;">
+        <div style="display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">The Hidden Cost of</p>
+          <h1 style="color: #cc2222; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0.1em 0;">Coordination</h1>
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">in Memory Management</p>
+        </div>
+      </section>
+
+      <!-- The Coordination Tax -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2><span style="color: var(--accent-red);">The</span> Coordination <span style="color: var(--accent-red);">Tax</span></h2>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Atomic reference counting</p>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Lock-free reclamation</p>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Cache-line bouncing</p>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/coordination-tax.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          In shared-memory languages: atomic reference counting is coordination — every copy/drop is a cache-line bouncing atomic op, forcing cores to agree on a count. Lock-free reclamation (hazard pointers, epoch-based) is coordination — threads must agree on when memory is safe to free.
+        </aside>
+      </section>
+
+      <!-- Didn't Rust Solve This? -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Didn't Rust Solve This?</h2>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Single thread? Yes</p>
+            <p class="fragment" style="color: var(--accent-red); font-size: 0.7em; margin: 0.4em 0 0 0;">Multiple threads? No</p>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/rust.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Rust gets this partly right: ownership and borrowing eliminate coordination for single-threaded access. But cross-thread sharing still requires runtime coordination — Arc, mutexes, channels. Rust solves aliasing at compile time within a thread but not across threads. (This sets up Pony's answer: what if you solved the cross-actor case at compile time too?)
+        </aside>
+      </section>
+
+      <!-- Stop the world -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2 style="color: var(--accent-red);">Stop the World GC</h2>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Maximalist Coordination</p>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/stop-the-world.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          In GC'd languages (Java, Go): stop-the-world is the ultimate coordination — every thread stops so the collector can get a consistent view of the heap.
+
+          The conventional wisdom treats this as inevitable. More concurrency = more coordination over memory. Pick your flavor of coordination, but you can't escape it.
+
+          But that's only true if your memory management requires global knowledge. What if it didn't?
+        </aside>
+      </section>
+
+      <!-- Section: Pony -->
+      <section data-background-color="#1a1a1a" style="padding: 0;">
+        <div style="display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+          <h1 style="color: var(--accent-blue); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0 0.2em;">Pony</h1>
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">Memory Management Acting Locally</p>
+        </div>
+      </section>
+
+      <!-- Actors -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Pony's Actors</h2>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">No shared mutable state</p>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">No copying to share data</p>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/actors.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Quick Pony intro — only what's needed: actors as the unit of concurrency, no shared mutable state. The type system tracks not just ownership but *how* a reference can be used — mutable or immutable, shareable or unique. This is decided at compile time, not enforced at runtime, so there's no coordination cost.
+        </aside>
+      </section>
+
+      <!-- Reference Capabilities -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Reference Capabilities</h2>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Mutable or immutable</p>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Shareable or unique</p>
+            <p class="fragment" style="color: var(--accent-blue); font-size: 0.7em; margin: 0.4em 0 0 0;">Compile time, not runtime</p>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/refcap.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Quick Pony intro — only what's needed: actors as the unit of concurrency, no shared mutable state. The type system tracks not just ownership but *how* a reference can be used — mutable or immutable, shareable or unique. This is decided at compile time, not enforced at runtime, so there's no coordination cost.
+        </aside>
+      </section>
+
+      <!-- Per-actor heaps -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Per-Actor Heaps</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/per-actor-heaps.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Per-actor heaps: each actor owns its own heap, collects independently. Collection is a local decision based on local knowledge. No actor needs to know what any other actor is doing. No stop-the-world. Ever. One actor collecting doesn't touch any other actor. Collection cost scales with the individual actor's heap, not the total program heap.
+        </aside>
+      </section>
+
+      <!-- Message passing is cheap -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2><span style="color: var(--accent-blue);">Message Passing</span><br>Is Cheap</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/message-passing-cheap.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Message passing is cheap: sending a message doesn't require atomic reference count updates or synchronization on the object — you just hand it over. The type system guarantees the sender gives up access, so there's no aliasing problem to solve at runtime. Immutable data can be shared across actors without copying — the type system guarantees no one can mutate it, so no coordination is needed.
+        </aside>
+      </section>
+
+      <!-- Gossip -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Gossip</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/gossip.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          Cross-actor references — the one place where actors can't act purely locally: what happens when actor A sends an object to actor B and B holds onto it? Actors gossip reference information by piggybacking on application messages — no separate GC channel, no synchronization. Each actor uses the gossiped information to make its *own* local collection decisions. They share information but don't coordinate action. This is the "silence is golden" principle applied to GC: communicate when you must, but never wait for agreement to act.
+        </aside>
+      </section>
+
+      <!-- Flat latency -->
+      <section data-background-image="images/flat-latency.png" data-background-size="100% 75%" data-background-position="center" data-background-color="#1a1a1a">
+      </section>
+
+      <!-- Section: Act Locally, All the Way Down -->
+      <section data-background-color="#1a1a1a" style="padding: 0;">
+        <div style="display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+          <h1 style="color: var(--accent-blue); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0 0.2em;">Act Locally</h1>
+          <p style="color: #ffd700; text-shadow: 3px 3px 0 rgba(0,0,0,0.4); margin: 0; font-family: 'Impact', 'Arial Narrow', sans-serif; text-transform: uppercase; font-size: 1.2em; letter-spacing: 0.02em;">All the Way Down</p>
+        </div>
+      </section>
+
+      <!-- Coordination is slow, not GC -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2><span style="color: var(--accent-red);">Coordination</span> Is Slow, <span style="color: var(--accent-blue);">GC</span> Isn't</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/not-gc.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          "GC is slow" is really "GC that requires global coordination is slow." That's not an inherent property of garbage collection — it's a consequence of designing GC for shared heaps. This isn't to say it's without cost — everything you have a computer do has a cost. But you need to look at a system as a totality, not as individual pieces, to understand what is "fast." Per-actor GC has costs; they're just not coordination costs.
+        </aside>
+      </section>
+
+      <!-- Go All In -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2>Go All In</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/all-in.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          When you commit fully to the message-passing model — actors with isolated heaps, no shared mutable state — GC stops requiring coordination. The kernel analogy revisited: just as microkernels gain isolation by committing to message passing, Pony gets GC properties that seem impossible if you're still thinking in shared-heap terms. The commitment to the model is what unlocks it.
+        </aside>
+      </section>
+
+      <!-- Coordination Reducing Design -->
+      <section data-background-color="#1a1a1a">
+        <div class="two-col" style="align-items: center; height: 100%;">
+          <div class="col-text" style="text-align: center;">
+            <h2 style="color: var(--accent-blue);">Coordination Reducing Design</h2>
+          </div>
+          <div class="col-image">
+            <div style="width: 500px; height: 500px; border: 4px solid var(--accent-yellow); box-shadow: 6px 6px 0 rgba(0,0,0,0.5); background: url('images/design.png') center/cover no-repeat;"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          The lesson isn't Pony-specific: "act locally, gossip don't coordinate" is a systems design principle. Pony just applies it more consistently than most, all the way down to memory management. If that sounds interesting — here's where to find us.
+        </aside>
+      </section>
+
+      <!-- Closing slide -->
+      <section data-background-image="images/victory.png" data-background-size="cover" data-background-position="center">
+        <h2 style="position: absolute; top: -228px; left: 40px; color: var(--accent-yellow); text-shadow: 4px 4px 0 rgba(0,0,0,0.6); margin: 0;">Learn More</h2>
+        <p style="position: absolute; top: -138px; left: 40px; font-size: 1em; text-shadow: 3px 3px 0 rgba(0,0,0,0.6); margin: 0; font-weight: bold;"><a href="https://www.seantallen.com/talks/gc-made-fast/" style="color: var(--accent-yellow); text-decoration: none;">seantallen.com/talks/gc-made-fast/</a></p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1920,
+      height: 1080,
+      margin: 0,
+      transition: 'none',
+      backgroundTransition: 'none',
+      plugins: [ RevealNotes ]
+    });
+
+    var quote = document.getElementById('title-quote');
+    Reveal.on('slidechanged', function(event) {
+      quote.style.display = (event.indexh === 0) ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
