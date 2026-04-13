@@ -1,7 +1,7 @@
 ---
 title: "Meet Murdock: The Wildcard in the Ensemble"
 slug: "meet-murdock"
-date: "2026-04-12T08:00:00-04:00"
+date: "2026-04-13T08:00:00-04:00"
 draft: false
 tags: ["LLM", "Ensemble Method"]
 description: "Why every ensemble of fixed-lens personas needs one deliberately unconstrained reviewer."
