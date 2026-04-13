@@ -46,3 +46,9 @@
   pre = "bluesky"
   url = "https://bsky.app/profile/seantallen.bsky.social"
   weight = 90
+
+[[main]]
+  identifier = "rss"
+  pre = "rss"
+  url = "/index.xml"
+  weight = 100
