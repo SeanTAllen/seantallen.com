@@ -33,3 +33,5 @@ This isn't magic and it isn't free. But the costs are local, not coordination co
 * [Pony: Co-designing a Type System and a Runtime](https://www.ponylang.io/media/papers/codesigning.pdf)
 * [Silence is Golden: Coordination-Avoiding Systems Design](https://www.youtube.com/watch?v=EYJnWttrC9k)
 * [Trash Day: Coordinating Garbage Collection in Distributed Systems](https://www.usenix.org/system/files/conference/hotos15/hotos15-paper-maas.pdf)
+* [Server utilization: Joel on queueing](https://www.johndcook.com/blog/2009/01/30/server-utilization-joel-on-queuing/)
+* [Waiting time, load factor, and queueing theory](https://erikbern.com/2018/03/27/waiting-time-load-factor-and-queueing-theory.html)
