@@ -22,6 +22,7 @@ This isn't magic and it isn't free. But the costs are local, not coordination co
 ## Links
 
 * [Pony](https://www.ponylang.io/)
+* [Lorin Hochstein](http://surfingcomplexity.blog/)
 
 ## References
 
