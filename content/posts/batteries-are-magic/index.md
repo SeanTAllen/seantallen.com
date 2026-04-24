@@ -6,7 +6,7 @@ draft: false
 tags: ["Miracles"]
 description: "On the miracles we no longer find miraculous."
 summary: "I understand how batteries work. It doesn't make them any less magical."
-imagePosition: "center 30%"
+imagePosition: "center 70%"
 ---
 
 The first time I remember thinking batteries are magic was several years ago at Velocity Conf in San Jose. I don't remember exactly what Alex Rasmussen and I were up to. We were walking down the street near the hotel. I think we'd just left a party for speakers. I'm not sure what we were talking about when I turned to Alex and said: I know how batteries work, and it doesn't make them any less magical.
