@@ -1,7 +1,7 @@
 ---
 title: "Batteries Are Magic"
 slug: "batteries-are-magic"
-date: "2026-04-23T08:00:00-04:00"
+date: "2026-04-24T08:00:00-04:00"
 draft: false
 tags: ["Miracles"]
 description: "On the miracles we no longer find miraculous."
