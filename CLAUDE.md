@@ -73,6 +73,27 @@ previous post's style.
 > height — leave the top 30% and bottom 10% as simple background.
 > [SCENE DESCRIPTION]. No text in the image.
 
+### Hero Crop Positioning
+
+When the generated image's subject isn't centered vertically, shift the
+hero crop with the `imagePosition` frontmatter field. The field maps to
+CSS `object-position`, so the source image stays untouched.
+
+Format: `imagePosition: "center N%"` — N is the vertical anchor point of
+the subject. Higher N shows more of the lower portion of the image;
+lower N shows more of the upper portion. Default (when omitted) is
+center-center.
+
+Examples in repo:
+
+- `posts/batteries-are-magic/`: `imagePosition: "center 70%"` (subject
+  in lower portion)
+- `posts/meet-murdock/`: `imagePosition: "center 30%"` (subject in
+  upper portion)
+
+Prefer this over editing the generated image with ImageMagick or other
+local tools.
+
 ## Deployment
 
 Netlify builds automatically on push. Deploy previews on PRs.
