@@ -20,7 +20,8 @@ mainSections = ["posts", "talks", "interviews", "panels", "papers"]
   layout = "hero"
   homepageImage = "img/homepage.png"
   showRecent = true
-  showRecentItems = 10
+  recentMonths = 6
+  recentMinimum = 10
 
 [article]
   showHero = true

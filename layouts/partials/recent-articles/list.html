@@ -1,0 +1,15 @@
+{{ $minimum := .Site.Params.homepage.recentMinimum | default 10 }}
+{{ $months := .Site.Params.homepage.recentMonths | default 6 }}
+{{ $cutoff := now.AddDate 0 (sub 0 $months) 0 }}
+{{ $allPages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+{{ $windowed := where $allPages "Date" "ge" $cutoff }}
+{{ $pages := $windowed }}
+{{ if lt (len $windowed) $minimum }}
+  {{ $pages = first $minimum $allPages }}
+{{ end }}
+
+<section class="space-y-10 w-full">
+  {{ range $pages }}
+    {{ partial "article-link/simple.html" . }}
+  {{ end }}
+</section>
