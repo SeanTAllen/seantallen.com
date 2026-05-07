@@ -37,7 +37,7 @@ For months. Turns out we were tokenizing on `a`.
 
 The executive meeting where we walked through the "occasional weird-results issue" was a hell of a thing.
 
-That was a moment. The idea was born there. The phrase came later. Not that day. Not right after either. But not long after. Whatever I said back then was longer. Clunkier. It took saying it out loud, over and over, to find the four words. To that team. Then to every team I ran. Then to anyone who'd listen. Shorter every time. Tighter every time.
+That was a moment. The idea was born there. The phrase came later. Not that day. Not right after either. But not long after. Whatever I said back then was longer. Clunkier. It took saying it out loud, over and over, to find the five words. To that team. Then to every team I ran. Then to anyone who'd listen. Shorter every time. Tighter every time.
 
 *Go slow to go fast.*
 
