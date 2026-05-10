@@ -61,7 +61,7 @@ before the gap is surfaced.
 ### Section 3 — The example: a multi-table database
 
 One example, built up across many slides. Users + orders +
-inventory. Operation: "place an order" touching all three
+stock. Operation: "place an order" touching all three
 atomically.
 
 The contrast goes three ways:
@@ -71,7 +71,7 @@ The contrast goes three ways:
 2. **Actor model**: safe, scalable, no data races — but multi-actor
    atomic ops are a *protocol*, not a primitive
 3. **BOC**: safe, scalable, AND multi-resource ops collapse to
-   `when (users, orders, inventory) { ... }`
+   `when (users, orders, stock) { ... }`
 
 Loops back to the genesis: Matt and Sylvan asked what Pony would
 need to be a good DB language. BOC is the answer.

@@ -574,6 +574,7 @@
   border-radius: 18px;
   margin-top: 120px;
   font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  position: relative;  /* anchor for the bounding-box highlight pseudo */
 }
 
 .reveal .actor-circle {
@@ -612,8 +613,319 @@
 .reveal .actor-station.actor-orders    .actor-circle { background-color: var(--sage);       color: var(--adobe-cream); }
 .reveal .actor-station.actor-orders    .actor-rect   { border-top: 10px solid var(--sage); }
 
-.reveal .actor-station.actor-inventory .actor-circle { background-color: var(--ochre);      color: var(--ink-black); }
-.reveal .actor-station.actor-inventory .actor-rect   { border-top: 10px solid var(--ochre); }
+.reveal .actor-station.actor-stock     .actor-circle { background-color: var(--ochre);      color: var(--adobe-cream); }
+.reveal .actor-station.actor-stock     .actor-rect   { border-top: 10px solid var(--ochre); }
+
+/* Query scene: Client circle ↔ Users actor station with a single
+   message arrow between them.
+
+   Layout:
+   - flex row with align-items: flex-start. The actor-station's
+     margin-top: 120px combined with the actor-circle's margin-top:
+     -120px puts the actor circle at row top (y=0). The bare client
+     circle (no station wrapper) also sits at row top. Both circles
+     are 240px tall, so their vertical midline is at y=120.
+   - The .message-slot sits between them and reserves layout space
+     even when no arrow is present (Frames 1–3). When an arrow IS
+     present (Frames 4–5), the SVG line is positioned at the circles'
+     midline so the arrow visually connects circle to circle. */
+
+.reveal .query-scene {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .client-circle {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 4px solid var(--ink-black);
+  background-color: var(--sky-turquoise);
+  color: var(--adobe-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  font-weight: 700;
+  flex: 0 0 auto;
+  position: relative;  /* anchor for the bounding-box highlight pseudo */
+}
+
+/* Reserved horizontal channel for an arrow; holds layout space whether
+   or not an arrow is currently shown. margin-top pushes its contents
+   down to the circles' vertical midline (y≈120 within the row). */
+.reveal .message-slot {
+  flex: 1 1 380px;
+  max-width: 480px;
+  min-width: 260px;
+  align-self: flex-start;
+  margin-top: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.reveal .message-arrow-svg {
+  width: 100%;
+  height: 24px;
+  display: block;
+}
+
+.reveal .arrow-line {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+  fill: none;
+}
+
+.reveal .arrow-head {
+  fill: var(--ink-black);
+}
+
+.reveal .arrow-label {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.7em;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Code-style label — used inside the looping query animation so the
+   request/response text reads as code/data, not as prose. System
+   monospace stack avoids an extra font load. */
+.reveal .arrow-label-code {
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 0.78em;
+  letter-spacing: -0.01em;
+}
+
+/* Looping query animation: two arrow+label pairs (query and data)
+   stacked on top of each other in the same slot, alternating opacity
+   on a shared cycle so the audience sees an endless back-and-forth
+   conversation. CSS Grid puts both children in the same cell so they
+   overlap precisely. */
+.reveal .message-loop-stack {
+  display: grid;
+  grid-template-areas: "stack";
+  width: 100%;
+}
+
+.reveal .message-loop {
+  grid-area: stack;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reveal .message-loop-query {
+  animation: query-loop 5s ease-in-out infinite;
+}
+
+.reveal .message-loop-data {
+  animation: data-loop 5s ease-in-out infinite;
+}
+
+/* 5s cycle: each arrow fades in over ~400ms, holds visible ~1.6s,
+   fades out over ~500ms, then the other arrow does the same. The
+   wider fade window (vs the original 5%) gives the transition more
+   weight so the flip reads as a gentler back-and-forth, not a snap. */
+@keyframes query-loop {
+  0%, 100% { opacity: 0; }
+  8%, 40%  { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes data-loop {
+  0%, 50%  { opacity: 0; }
+  58%, 90% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Spotlight ring: when an entity is highlighted, a deep-rust ring
+   surrounds the entity's existing shape via box-shadow. Doesn't
+   shift layout and follows border-radius (so circles get a circular
+   ring). Highlight goes on the actor-circle (not the actor-station)
+   for the in-deck actor since the circle is the audience-facing
+   "actor identity" element. The ring breathes via a spread-pulse
+   keyframe so it draws the eye even when the slide is otherwise
+   static. */
+@keyframes spotlight-pulse {
+  0%, 100% { box-shadow: 0 0 0 10px var(--deep-rust); }
+  50%      { box-shadow: 0 0 0 18px var(--deep-rust); }
+}
+
+.reveal .client-circle.highlighted,
+.reveal .actor-station .actor-circle.highlighted,
+.reveal .actor-station .actor-rect.highlighted {
+  box-shadow: 0 0 0 10px var(--deep-rust);
+  animation: spotlight-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── JOIN scene (triangular spatial) ───────────────────────────────
+   Client at top-center, Users bottom-left, Orders bottom-right.
+   Entities are absolutely positioned at known coordinates inside a
+   fixed-size scene container; an SVG overlay (with a matching
+   viewBox) draws the message arrows so they align with the circles'
+   edges.
+
+   Scene is 1300×780. Coordinates used by the overlay SVG:
+     Client circle center  = (650, 120)   (top, centered)
+     Users  circle center  = (240, 268)   (bottom-left)
+     Orders circle center  = (1060, 268)  (bottom-right)
+
+   The actor-station's default margin-top: 120 (which lifts its
+   popped circle into the layout) is overridden to 0 here because
+   absolute positioning handles the offset directly. */
+
+.reveal .join-scene {
+  position: relative;
+  width: 1300px;
+  height: 780px;
+  margin: 0 auto;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .join-scene .join-client-pos {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 120px);
+}
+
+.reveal .join-scene .join-users-pos {
+  position: absolute;
+  bottom: 0;
+  left: 80px;
+  margin-top: 0;
+}
+
+.reveal .join-scene .join-orders-pos {
+  position: absolute;
+  bottom: 0;
+  right: 80px;
+  margin-top: 0;
+}
+
+.reveal .join-arrows-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.reveal .join-arrows-overlay svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Looping JOIN: queries fire (both arrows down to actors), then
+   responses return (both arrows up to client). Same opacity-based
+   pattern as the single-table loop, just with a longer cycle since
+   there's more to read. */
+.reveal .join-loop-queries {
+  animation: join-queries-loop 5s ease-in-out infinite;
+}
+
+.reveal .join-loop-responses {
+  animation: join-responses-loop 5s ease-in-out infinite;
+}
+
+@keyframes join-queries-loop {
+  0%, 100% { opacity: 0; }
+  8%, 40%  { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes join-responses-loop {
+  0%, 50%  { opacity: 0; }
+  58%, 90% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Inline label for arrows in the JOIN scene. Renders as an HTML
+   element positioned over the SVG (absolute pixel coords match the
+   SVG's viewBox via parent's transform-free overlay). */
+.reveal .join-arrow-label {
+  position: absolute;
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  color: var(--ink-black);
+  background-color: var(--adobe-cream);
+  padding: 2px 10px;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ── Sequence diagram scene (temporal — for the locking protocol) ──
+   Three vertical lifelines (Client, Users, Orders), time flows down,
+   horizontal arrows are messages. Conventional UML-style sequence
+   diagram, drawn in a single SVG so message coordinates can be
+   precise. */
+
+.reveal .sequence-scene {
+  width: 100%;
+  height: 100%;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .sequence-scene svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reveal .seq-lifeline {
+  stroke: var(--ink-black);
+  stroke-width: 2;
+  stroke-dasharray: 8 6;
+  fill: none;
+}
+
+.reveal .seq-head-circle {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+}
+
+.reveal .seq-head-client    { fill: var(--sky-turquoise); }
+.reveal .seq-head-users     { fill: var(--terracotta); }
+.reveal .seq-head-orders    { fill: var(--sage); }
+
+.reveal .seq-head-label {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  fill: var(--adobe-cream);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .seq-msg-line {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+  fill: none;
+}
+
+.reveal .seq-msg-label {
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  fill: var(--ink-black);
+  text-anchor: middle;
+}
+
+.reveal .seq-phase-label {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--deep-rust);
+  text-anchor: start;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 
 /* Bridge slide (image-only, full-bleed). */
 
