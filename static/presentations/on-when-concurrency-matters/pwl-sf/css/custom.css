@@ -1,0 +1,699 @@
+/*
+ * Behaviour-Oriented Concurrency — Custom Theme
+ *
+ * Visual identity: 1960s "World of Tomorrow" mid-century children's
+ * book illustration with an Albuquerque/Southwestern atomic-age
+ * twist. Pueblo Revival meets Googie. Sandia Mountains optional.
+ *
+ * Palette (provisional — sampled by eye from the cover; refine):
+ *
+ *   --sky-turquoise:  #5fa3b2   sky, primary cool
+ *   --terracotta:     #b8643c   warm accent / building reds
+ *   --ochre:          #c8a060   sandy ground tone
+ *   --adobe-cream:    #e6d2a5   building cream, body text light
+ *   --sage:           #6a8255   cacti / vegetation
+ *   --deep-rust:      #8a3823   shadows / accent dark warm
+ *   --ink-black:      #1f1a14   outlines, text on light, drop shadow
+ */
+
+:root {
+  --sky-turquoise: #5fa3b2;
+  --terracotta: #b8643c;
+  --ochre: #c8a060;
+  --adobe-cream: #e6d2a5;
+  --sage: #6a8255;
+  --deep-rust: #8a3823;
+  --ink-black: #1f1a14;
+}
+
+/* ── Base ── */
+
+.reveal {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ink-black);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+/* ── Cover slide ── */
+
+.reveal .slides section.cover-slide {
+  height: 100%;
+}
+
+.reveal .cover-title {
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  display: inline-block;
+  background-color: var(--terracotta);
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.15em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin: 0;
+  padding: 20px 35px;
+  border: 3px solid var(--ink-black);
+}
+
+.reveal .cover-title .cover-on {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.65em;
+  font-style: italic;
+  font-weight: 400;
+  margin-right: 0.25em;
+  vertical-align: 0.4em;
+}
+
+/* ── About slide ── */
+
+.reveal .slides section.about-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .about-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .about-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .about-name {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.2em;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0 0 0.1em 0;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.reveal .about-url {
+  color: var(--deep-rust);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.6em;
+  font-style: italic;
+  margin: 0 0 1.4em 0;
+}
+
+.reveal .about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reveal .about-list li {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85em;
+  font-weight: 400;
+  margin: 0.5em 0;
+  padding-left: 1.4em;
+  position: relative;
+  line-height: 1.3;
+}
+
+.reveal .about-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.55em;
+  height: 0.55em;
+  background-color: var(--terracotta);
+  border-radius: 50%;
+}
+
+.reveal .about-image {
+  flex: 0 0 auto;
+}
+
+.reveal .about-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/about-me.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Topic intro slide ── */
+
+.reveal .slides section.topic-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .topic-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .topic-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .topic-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .topic-heading .topic-on {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.65em;
+  font-style: italic;
+  font-weight: 400;
+  margin-right: 0.25em;
+  vertical-align: 0.4em;
+}
+
+.reveal .topic-image {
+  flex: 0 0 auto;
+}
+
+.reveal .topic-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/mail-sorting.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Archaeology / "Some History" slide ── */
+
+.reveal .slides section.archaeology-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .archaeology-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .archaeology-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .archaeology-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .archaeology-image {
+  flex: 0 0 auto;
+}
+
+.reveal .archaeology-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/archaeology.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Section divider slides ── */
+
+.reveal .slides section.section-divider {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .section-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--terracotta);
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3.6em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  padding: 40px 70px;
+  border: 4px solid var(--ink-black);
+  border-left: none;
+  border-right: none;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Generic content slide (heading + bullet list) ── */
+
+.reveal .slides section.content-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .content-stack {
+  height: 100%;
+  padding: 100px 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+}
+
+.reveal .content-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .content-text {
+  flex: 1;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.reveal .content-image {
+  flex: 0 0 auto;
+}
+
+.reveal .actor-basics-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actor-booths.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .content-lead {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.reveal .data-race-freedom-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/data-race-freedom.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .actors-provide-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actors-provide.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Plaque slide (Option A comparison) ── */
+
+.reveal .slides section.plaque-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .plaque {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--terracotta);
+  border: 8px solid var(--ink-black);
+  padding: 60px 120px;
+  box-shadow: 10px 10px 0 rgba(31, 26, 20, 0.35);
+}
+
+.reveal .plaque::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  border: 2px solid var(--adobe-cream);
+  pointer-events: none;
+}
+
+/* Corner rivets — small dark dots at each corner of the plaque */
+.reveal .plaque-rivet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--ink-black);
+  border-radius: 50%;
+  border: 2px solid var(--adobe-cream);
+  z-index: 2;
+}
+.reveal .plaque-rivet-tl { top: 18px; left: 18px; }
+.reveal .plaque-rivet-tr { top: 18px; right: 18px; }
+.reveal .plaque-rivet-bl { bottom: 18px; left: 18px; }
+.reveal .plaque-rivet-br { bottom: 18px; right: 18px; }
+
+/* Decorative ornament with rules either side of an atomic symbol */
+.reveal .plaque-ornament {
+  text-align: center;
+  font-size: 1em;
+  color: var(--adobe-cream);
+  position: relative;
+  margin: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.reveal .plaque-ornament::before,
+.reveal .plaque-ornament::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--adobe-cream);
+  max-width: 90px;
+}
+
+.reveal .plaque-ornament-top {
+  margin-bottom: 30px;
+}
+
+.reveal .plaque-ornament-bottom {
+  margin-top: 30px;
+}
+
+.reveal .plaque-text {
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  margin: 0;
+  padding: 0 30px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Plaque inside a content-grid column (third comparison) — drop the
+   absolute centering and shrink so it sits cleanly next to an image. */
+
+.reveal .plaque-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal .plaque-column .plaque {
+  position: static;
+  transform: none;
+  padding: 40px 60px;
+  box-shadow: 8px 8px 0 rgba(31, 26, 20, 0.35);
+}
+
+.reveal .plaque-column .plaque-text {
+  font-size: 1.6em;
+  padding: 0 20px;
+}
+
+.reveal .plaque-column .plaque-ornament-top {
+  margin-bottom: 22px;
+}
+
+.reveal .plaque-column .plaque-ornament-bottom {
+  margin-top: 22px;
+}
+
+.reveal .plaque-column .plaque-rivet {
+  width: 11px;
+  height: 11px;
+}
+
+.reveal .plaque-column .plaque-rivet-tl,
+.reveal .plaque-column .plaque-rivet-tr { top: 14px; }
+.reveal .plaque-column .plaque-rivet-bl,
+.reveal .plaque-column .plaque-rivet-br { bottom: 14px; }
+.reveal .plaque-column .plaque-rivet-tl,
+.reveal .plaque-column .plaque-rivet-bl { left: 14px; }
+.reveal .plaque-column .plaque-rivet-tr,
+.reveal .plaque-column .plaque-rivet-br { right: 14px; }
+
+.reveal .sequential-reasoning-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/sequential-reasoning.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .no-more-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/no-more.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .deadlock-free-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/deadlock-free.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* Diagram-format slides — header at top, larger diagram area below. */
+
+.reveal .slides section.diagram-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .diagram-stack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 100px;
+  box-sizing: border-box;
+  gap: 30px;
+}
+
+.reveal .diagram-header {
+  flex: 0 0 auto;
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid var(--terracotta);
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .diagram-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.reveal .diagram-portrait {
+  width: 100%;
+  height: 100%;
+  background-color: var(--ochre);
+  border: 4px solid var(--ink-black);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Per-slide diagram backgrounds will be added when each diagram lands. */
+
+/* HTML/CSS structural diagrams (replacing Mermaid). */
+
+/* Slide 1: Each table is an actor — three stations, each a circle (actor)
+   over a rectangle (table) with row hints. */
+
+.reveal .actor-stations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  width: 100%;
+  height: 100%;
+}
+
+.reveal .actor-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 0 36px 30px 36px;
+  border: 3px solid var(--ink-black);
+  border-radius: 18px;
+  margin-top: 120px;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .actor-circle {
+  width: 240px;
+  height: 240px;
+  margin-top: -120px;
+  border-radius: 50%;
+  border: 4px solid var(--ink-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.reveal .actor-rect {
+  width: 220px;
+  height: 220px;
+  border: 4px solid var(--ink-black);
+  background-color: var(--adobe-cream);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 38px,
+    rgba(31, 26, 20, 0.18) 38px,
+    rgba(31, 26, 20, 0.18) 40px
+  );
+}
+
+.reveal .actor-station.actor-users     .actor-circle { background-color: var(--terracotta); color: var(--adobe-cream); }
+.reveal .actor-station.actor-users     .actor-rect   { border-top: 10px solid var(--terracotta); }
+
+.reveal .actor-station.actor-orders    .actor-circle { background-color: var(--sage);       color: var(--adobe-cream); }
+.reveal .actor-station.actor-orders    .actor-rect   { border-top: 10px solid var(--sage); }
+
+.reveal .actor-station.actor-inventory .actor-circle { background-color: var(--ochre);      color: var(--ink-black); }
+.reveal .actor-station.actor-inventory .actor-rect   { border-top: 10px solid var(--ochre); }
+
+/* Bridge slide (image-only, full-bleed). */
+
+.reveal .slides section.bridge-slide {
+  height: 100%;
+}
+
+/* Big-statement slide (centered text, no image, no band). */
+
+.reveal .slides section.big-statement-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .big-statement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  margin: 0;
+  padding: 0 80px;
+  box-sizing: border-box;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .actor-prevents-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actor-prevents.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .content-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.reveal .heading-accent {
+  color: var(--deep-rust);
+}
+
+.reveal .content-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reveal .content-list li {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.4em;
+  font-weight: 400;
+  margin: 0.7em 0;
+  padding-left: 1.5em;
+  position: relative;
+  line-height: 1.3;
+}
+
+.reveal .content-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.6em;
+  height: 0.6em;
+  background-color: var(--terracotta);
+  border-radius: 50%;
+}

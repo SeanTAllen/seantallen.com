@@ -171,8 +171,7 @@ World-of-Tomorrow vocabulary.
 
 - **Talk length**: content first, length follows. Will become
   apparent once the outline is fleshed out.
-- **Venue**: none yet. Currently filed under `draft/`
-  placeholder. Rename once a venue is locked in.
+- **Venue**: Papers We Love San Francisco. Filed under `pwl-sf/`.
 - **Typography**: geometric sans assumed; revisit when scaffolding.
 
 ## Repo conventions noted

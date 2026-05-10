@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On When Concurrency Matters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Cover slide -->
+      <section class="cover-slide" data-background-image="images/cover.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <h1 class="cover-title"><span class="cover-on">On</span> When Concurrency Matters</h1>
+      </section>
+
+      <!-- About me -->
+      <section class="about-slide" data-background-color="#e6d2a5">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 class="about-name">Sean T. Allen</h2>
+            <p class="about-url">www.seantallen.com</p>
+            <ul class="about-list">
+              <li>Distinguished Engineer @ Antithesis</li>
+              <li>Member of the Pony core team</li>
+              <li>High Plains Drifter</li>
+              <li>Reviewer #2</li>
+            </ul>
+          </div>
+          <div class="about-image">
+            <div class="about-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Topic intro -->
+      <section class="topic-slide" data-background-color="#5fa3b2">
+        <div class="topic-grid">
+          <div class="topic-text">
+            <h2 class="topic-heading"><span class="topic-on">On</span> When Concurrency Matters:<br>Behaviour-Oriented Concurrency</h2>
+          </div>
+          <div class="topic-image">
+            <div class="topic-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Talk about concurrency.</li>
+            <li>Talk about safe concurrency.</li>
+            <li>Talk about Pony quickly.</li>
+            <li>Talk about BoC quickly.</li>
+          </ul>
+          <p>But first, some history.</p>
+        </aside>
+      </section>
+
+      <!-- Some History -->
+      <section class="archaeology-slide" data-background-color="#e6d2a5">
+        <div class="archaeology-grid">
+          <div class="archaeology-text">
+            <h2 class="archaeology-heading">Some History</h2>
+          </div>
+          <div class="archaeology-image">
+            <div class="archaeology-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Matt Parkinson + Sylvan Clebsch conversations: "what would Pony need to be a good database language?"</li>
+            <li>That question led to BoC</li>
+            <li>BoC is being implemented in Verona (Microsoft)</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Section: The Actor Model -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">The Actor Model</h1>
+        <aside class="notes">
+          <ul>
+            <li>This is the Platonic actor model.</li>
+            <li>Real implementations can come up lacking.</li>
+            <li>Some violate properties we're about to discuss.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors pass messages -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">pass</span> messages</h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors message each other.</li>
+            <li>This is <em>asynchronous</em> &mdash; call it out, not everyone in the audience will assume it.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors protect resources -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">protect</span> resources</h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>files, sockets, data structures, etc.</p>
+        </aside>
+      </section>
+
+      <!-- Actors have private memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">own</span> their memory</h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors protect resources.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors combine behavior and memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br>combine <span class="heading-accent">behavior</span><br>and <span class="heading-accent">memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Combining behavior and memory makes them very OO-like.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- No globals -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">globals</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- No locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">locks</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- No shared state -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">shared state</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors allow sequential reasoning -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors allow<br><span class="heading-accent">sequential</span> reasoning</h2>
+          </div>
+          <div class="content-image">
+            <div class="sequential-reasoning-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors process messages sequentially.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors scale horizontally -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors can<br><span class="heading-accent">scale</span> horizontally</h2>
+          </div>
+          <div class="content-image">
+            <div class="actors-provide-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors are deadlock-free -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors are<br><span class="heading-accent">deadlock</span>-free</h2>
+          </div>
+          <div class="content-image">
+            <div class="deadlock-free-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors provide data race freedom -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors provide<br><span class="heading-accent">data race</span> freedom</h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-prevents-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>All variables are &ldquo;protected&rdquo; by an actor &mdash; no globals.</li>
+            <li>Processed sequentially, one message at a time.</li>
+            <li>Actors are &ldquo;synchronization operations&rdquo;.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Bridge image slide (image-only, talked over) -->
+      <section class="bridge-slide" data-background-image="images/bridge-shining-city.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <ul>
+            <li>Stay with what the actor model is good at and everything is wonderful.</li>
+            <li>But there are points of pain &mdash; places it won't help.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Section: Coordination Pain -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">Coordination Pain</h1>
+      </section>
+
+      <!-- Bridge image slide (image-only, what we want) -->
+      <section class="bridge-slide" data-background-image="images/bridge-one-operation.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <ul>
+            <li>The actor model conflates behavior and data &mdash; they're bound together in each actor.</li>
+            <li>What happens when you want one operation over more than one set of data?</li>
+            <li>You either normalize upfront so the data lives in one actor &mdash; or you jump through coordination hoops.</li>
+            <li>For most use cases, this doesn't matter.</li>
+            <li>For things like an ACID database, it does.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Transition: what does it look like? -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">Actors on <span class="heading-accent">ACID</span></h2>
+      </section>
+
+      <!-- Tables as actors -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-inventory">
+                <div class="actor-circle">Inventory</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Each table modeled as its own actor.</li>
+            <li>Access to the table is mediated by its actor &mdash; the actor is the only way in.</li>
+            <li>Why this shape? Horizontal scaling &mdash; each actor runs independently.</li>
+            <li>Single-actor DB is the alternative, but it defeats the point.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Single-table query 1 (Users) -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="mermaid">
+sequenceDiagram
+  participant C as Client
+  participant U as Users actor
+  C->>U: get user 42
+  U-->>C: user 42 data
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Query is a message to the actor.</li>
+            <li>Result is a message back.</li>
+            <li>No problem &mdash; this is what actors are great at.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Single-table query 2 (Orders) -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Another <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="mermaid">
+sequenceDiagram
+  participant C as Client
+  participant O as Orders actor
+  C->>O: get orders for user 42
+  O-->>C: order list
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Same pattern, different actor.</li>
+            <li>Still no problem.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- JOIN -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">JOIN</span></h2>
+          <div class="diagram-area">
+            <div class="mermaid">
+sequenceDiagram
+  participant C as Client
+  participant U as Users actor
+  participant O as Orders actor
+  C->>U: get user 42
+  C->>O: get orders for user 42
+  U-->>C: user 42 data
+  O-->>C: order list
+  Note over C: combine into JOIN result
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Now we need data from two actors.</li>
+            <li>Looks fine on the surface &mdash; but consistency is the question.</li>
+            <li>What if Users changes between the two responses?</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- You'd have to... -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">You'd have to&hellip;</h2>
+          <div class="diagram-area">
+            <div class="diagram-portrait diagram-protocol"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Pause incoming messages on each table.</li>
+            <li>Coordinate the access order.</li>
+            <li>Release when done.</li>
+            <li>Handle failures and livelocks.</li>
+            <li>You're building a distributed mutex out of messages.</li>
+            <li>Slower and more fragile than what databases do internally.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Closing slide -->
+      <section class="closing-slide" data-background-image="images/closing.png" data-background-size="cover" data-background-position="center" data-background-color="#e6d2a5">
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      flowchart: { useMaxWidth: false, htmlLabels: false, padding: 20 },
+      themeVariables: {
+        primaryColor: '#b8643c',
+        primaryTextColor: '#e6d2a5',
+        primaryBorderColor: '#1f1a14',
+        lineColor: '#1f1a14',
+        secondaryColor: '#5fa3b2',
+        tertiaryColor: '#c8a060',
+        background: '#e6d2a5',
+        mainBkg: '#b8643c',
+        fontSize: '32px'
+      }
+    });
+
+    Reveal.initialize({
+      hash: true,
+      width: 1920,
+      height: 1080,
+      margin: 0,
+      transition: 'none',
+      backgroundTransition: 'none',
+      plugins: [ RevealNotes ]
+    });
+
+    Reveal.on('ready', () => { mermaid.run(); });
+  </script>
+</body>
+</html>
