@@ -24,6 +24,7 @@
   --sage: #6a8255;
   --deep-rust: #8a3823;
   --ink-black: #1f1a14;
+  --highlight-yellow: #e8b830;
 }
 
 /* ── Base ── */
@@ -203,6 +204,52 @@
   border: 4px solid var(--ink-black);
 }
 
+/* ── Concurrency intro slide (image + text grid, matches About me /
+       Topic intro / Some History rhythm) ── */
+
+.reveal .slides section.concurrency-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .concurrency-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .concurrency-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .concurrency-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .concurrency-image {
+  flex: 0 0 auto;
+}
+
+.reveal .concurrency-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/concurrency.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
 /* ── Archaeology / "Some History" slide ── */
 
 .reveal .slides section.archaeology-slide {
@@ -245,6 +292,52 @@
   width: 600px;
   height: 600px;
   background: url('../images/archaeology.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── ACID DB intro slide (image + text grid, matches the rhythm of
+       the other intro slides) ── */
+
+.reveal .slides section.acid-db-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .acid-db-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .acid-db-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .acid-db-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .acid-db-image {
+  flex: 0 0 auto;
+}
+
+.reveal .acid-db-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/acid-db.png') center/cover no-repeat;
   border: 4px solid var(--ink-black);
 }
 
@@ -766,17 +859,214 @@
   animation: spotlight-pulse 1.5s ease-in-out infinite;
 }
 
-/* ── JOIN scene (triangular spatial) ───────────────────────────────
-   Client at top-center, Users bottom-left, Orders bottom-right.
-   Entities are absolutely positioned at known coordinates inside a
-   fixed-size scene container; an SVG overlay (with a matching
-   viewBox) draws the message arrows so they align with the circles'
-   edges.
+/* ── JOIN scene (pure SVG) ─────────────────────────────────────────
+   Everything in one SVG with viewBox 1500×800 so coordinates are
+   deterministic. No CSS box-model interaction.
 
-   Scene is 1300×780. Coordinates used by the overlay SVG:
-     Client circle center  = (650, 120)   (top, centered)
-     Users  circle center  = (240, 268)   (bottom-left)
-     Orders circle center  = (1060, 268)  (bottom-right)
+   Entity positions in SVG user units:
+     Client circle: cx=200, cy=400, r=120  (left, vertically centered)
+     Users  circle: cx=1300, cy=100, r=65  (top right, slim)
+     Users  table:  x=1245, y=180, w=110, h=110
+     Orders circle: cx=1300, cy=580, r=65  (bottom right, slim)
+     Orders table:  x=1245, y=660, w=110, h=110
+
+   Arrow tangent endpoints (line from circle edge to circle edge,
+   then end pulled back 12u for arrowhead clearance):
+     Client→Users:  (316, 369) → (1225, 120)
+     Client→Orders: (318, 419) → (1224, 568)
+     Users→Client:  (1237, 117) → (328, 366)
+     Orders→Client: (1236, 570) → (330, 421)
+   Label midpoints:
+     Client↔Users:  (770, 244)
+     Client↔Orders: (771, 494) */
+
+.reveal .join-svg {
+  width: 1500px;
+  height: 800px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Client (full size) */
+.reveal .join-svg .jsvg-client {
+  fill: var(--sky-turquoise);
+  stroke: var(--ink-black);
+  stroke-width: 4;
+}
+.reveal .join-svg .jsvg-client-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Slim actor circles */
+.reveal .join-svg .jsvg-users-circle {
+  fill: var(--terracotta);
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+.reveal .join-svg .jsvg-orders-circle {
+  fill: var(--sage);
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+.reveal .join-svg .jsvg-actor-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Slim actor tables (rect with horizontal lines + color stripe + border) */
+.reveal .join-svg .jsvg-table-bg     { fill: var(--adobe-cream); }
+.reveal .join-svg .jsvg-table-border { fill: none; stroke: var(--ink-black); stroke-width: 3; }
+.reveal .join-svg .jsvg-table-line   { stroke: rgba(31, 26, 20, 0.18); stroke-width: 1; }
+.reveal .join-svg .jsvg-stripe-users  { fill: var(--terracotta); }
+.reveal .join-svg .jsvg-stripe-orders { fill: var(--sage); }
+
+/* Arrows */
+.reveal .join-svg .jsvg-arrow-line {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+  fill: none;
+}
+.reveal .join-svg .jsvg-arrow-head {
+  fill: var(--ink-black);
+}
+
+/* SQL/data label (group: rect background + text on top) */
+.reveal .join-svg .jsvg-label-bg {
+  fill: var(--adobe-cream);
+}
+.reveal .join-svg .jsvg-label-text {
+  fill: var(--ink-black);
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Highlight ring for the Client (Frame 6 — combining locally) */
+.reveal .join-svg .jsvg-highlight-ring {
+  fill: none;
+  stroke: var(--deep-rust);
+  stroke-width: 10;
+  animation: jsvg-highlight-pulse 1.5s ease-in-out infinite;
+}
+@keyframes jsvg-highlight-pulse {
+  0%, 100% { stroke-width: 8; }
+  50%      { stroke-width: 16; }
+}
+
+/* ── Interleaving timeline scene (pure SVG) ──────────────────────────
+   Two horizontal arrows representing concurrent participants over time.
+   Top: Our Client (turquoise dots = read operations)
+   Bottom: Other Writer (deep-rust dots = write operations)
+   Yellow ring (highlight color, distinct from entity palette) walks
+   through key moments to anchor the speaker's narration. */
+
+.reveal .timeline-svg {
+  width: 1500px;
+  height: 800px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.reveal .timeline-svg .tl-label {
+  fill: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  text-anchor: start;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-arrow {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+  fill: none;
+}
+
+.reveal .timeline-svg .tl-arrow-head {
+  fill: var(--ink-black);
+}
+
+.reveal .timeline-svg .tl-dot {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+
+.reveal .timeline-svg .tl-dot-client {
+  fill: var(--sky-turquoise);
+}
+
+.reveal .timeline-svg .tl-dot-writer {
+  fill: var(--deep-rust);
+}
+
+.reveal .timeline-svg .tl-dot-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-dot-label {
+  fill: var(--ink-black);
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-highlight {
+  stroke: var(--highlight-yellow);
+  stroke-width: 7;
+  fill: none;
+  animation: tl-highlight-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tl-highlight-pulse {
+  0%, 100% { stroke-width: 7; }
+  50%      { stroke-width: 13; }
+}
+
+/* ── (legacy hybrid HTML/CSS+SVG approach for the JOIN scene — kept
+       for now in case the SVG rebuild needs to fall back) ────────── */
+   Client (full size) on the left; Users and Orders as slimmed-down
+   actor stations stacked on the right. The slimmed variant uses a
+   smaller circle and table since the iconography ("circle = actor,
+   rect = data the actor owns") is already established earlier in
+   the deck — we don't need to teach it again, just reference it.
+
+   Layout gives the long horizontal middle to the arrows + their
+   inline SQL/data labels.
+
+   Scene is 1500×800. Coordinates used by the overlay SVG:
+     Client circle center  = (200, 400)   (left, vertically centered; r=120)
+     Users  circle center  = (1380, 65)   (top-right; r=65 slimmed)
+     Orders circle center  = (1380, 524)  (bottom-right; r=65 slimmed)
+
+   Tangent endpoints (line from Client edge to actor edge):
+     Client→Users:  (315, 367) → (1317, 83)
+     Client→Orders: (319, 413) → (1315, 517)
+   Receiving-end pull-back (18u along line) so the arrowhead tip
+   lands cleanly outside the destination circle:
+     Client→Users  arrow ends at (1300, 88)
+     Client→Orders arrow ends at (1297, 515)
+     Users→Client  arrow ends at (332, 362)
+     Orders→Client arrow ends at (337, 415)
+
+   Arrow midpoints (label positions):
+     Client↔Users  midline ≈ (810, 225)
+     Client↔Orders midline ≈ (810, 465)
 
    The actor-station's default margin-top: 120 (which lifts its
    popped circle into the layout) is overridden to 0 here because
@@ -784,22 +1074,23 @@
 
 .reveal .join-scene {
   position: relative;
-  width: 1300px;
-  height: 780px;
+  width: 1500px;
+  height: 800px;
   margin: 0 auto;
   font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  flex-shrink: 0;  /* never compress: keeps actor positions matching arrow coords */
 }
 
 .reveal .join-scene .join-client-pos {
   position: absolute;
-  top: 0;
-  left: calc(50% - 120px);
+  top: 280px;  /* 240px circle centered vertically: scene-h/2 - circle-r = 400 - 120 */
+  left: 80px;
 }
 
 .reveal .join-scene .join-users-pos {
   position: absolute;
-  bottom: 0;
-  left: 80px;
+  top: 65px;  /* slimmed circle pops 65 above station box; box top here, circle top at 0 */
+  right: 80px;
   margin-top: 0;
 }
 
@@ -809,6 +1100,42 @@
   right: 80px;
   margin-top: 0;
 }
+
+/* Slimmed actor variant — used inside .join-scene where space is tight
+   and the icon is a callback to the established vocabulary, not a
+   primary teaching tool. About half the size of the full version. */
+.reveal .join-scene .actor-station {
+  padding: 0 20px 16px 20px;
+  gap: 14px;
+  border-width: 2px;
+  border-radius: 12px;
+}
+
+.reveal .join-scene .actor-circle {
+  width: 130px;
+  height: 130px;
+  margin-top: -65px;
+  border-width: 3px;
+  font-size: 0.9em;
+}
+
+.reveal .join-scene .actor-rect {
+  width: 110px;
+  height: 110px;
+  border-width: 3px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 22px,
+    rgba(31, 26, 20, 0.18) 22px,
+    rgba(31, 26, 20, 0.18) 24px
+  );
+}
+
+/* Override per-actor top stripe to a thinner band proportional to
+   the slimmed rectangle. */
+.reveal .join-scene .actor-station.actor-users  .actor-rect { border-top-width: 6px; }
+.reveal .join-scene .actor-station.actor-orders .actor-rect { border-top-width: 6px; }
 
 .reveal .join-arrows-overlay {
   position: absolute;
@@ -859,6 +1186,48 @@
   white-space: nowrap;
   transform: translate(-50%, -50%);
   pointer-events: none;
+}
+
+/* When a slide stacks the join-scene above an event log, switch the
+   diagram-area to a column layout so they sit one above the other
+   instead of being centered side-by-side. */
+.reveal .diagram-area-with-log {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Event log: the running list of messages exchanged so far. Lines
+   accumulate per frame (frame N = N lines visible). The most recent
+   line gets emphasized via .join-event-current so the audience's
+   eye knows what just happened. */
+.reveal .join-event-log {
+  width: 1300px;
+  margin: 0;
+  padding: 0 20px;
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  color: var(--ink-black);
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.reveal .join-event {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+.reveal .join-event-num {
+  color: var(--deep-rust);
+  font-weight: 700;
+  margin-right: 0.5em;
+}
+
+.reveal .join-event-current {
+  color: var(--deep-rust);
+  font-weight: 700;
 }
 
 /* ── Sequence diagram scene (temporal — for the locking protocol) ──
