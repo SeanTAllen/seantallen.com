@@ -1526,6 +1526,117 @@
         </aside>
       </section>
 
+      <!-- ================================================================
+           Behaviour-Oriented Concurrency — the payoff
+           Section divider, framing big-statement, code reveal of `when`.
+           Cowns/Behaviours/guarantees/example come next.
+           ================================================================ -->
+
+      <!-- Section divider: BoC -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">BoC</h1>
+        <aside class="notes">
+          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BoC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
+        </aside>
+      </section>
+
+      <!-- Framing: the actor model, turned around -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">The actor model,<br><span class="heading-accent">turned around.</span></h2>
+        <aside class="notes">
+          <p>The framing. Sets up the audience's mental model before the code lands. In the actor model behavior and state are bound together &mdash; coordination across them becomes a protocol. BoC pulls them apart: the data (cowns) and the work (behaviours) are separate, and coordination is built into how they get put back together. Same primitives, rotated.</p>
+        </aside>
+      </section>
+
+      <!-- The `when` code reveal — answer to the 12-message JOIN -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">What if the JOIN just looked like <span class="heading-accent">this</span>?</h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (users, orders) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The payoff. The JOIN we just spent 12 messages of protocol on, written as one block. The <code>when</code> keyword takes the cowns it needs, the body runs with exclusive access to all of them, and the result drops out. No LOCK / GRANTED / READ / DATA / RELEASE / RELEASED choreography. The whole protocol got absorbed into one keyword.</p>
+        </aside>
+      </section>
+
+      <!-- Cowns intro — parallel format to the actor property slides -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">own</span> data</h2>
+          </div>
+          <div class="content-image">
+            <div class="cowns-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>"Cown" = concurrent owner. A unit of state &mdash; like the data an actor owned, but pulled out from behind the actor. Each cown protects its contents; only one behaviour at a time can hold it. Think of them as the actor's table, no longer attached to a behavior.</p>
+        </aside>
+      </section>
+
+      <!-- Behaviours intro — parallel format to the actor property slides -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours<br><span class="heading-accent">acquire</span> cowns</h2>
+          </div>
+          <div class="content-image">
+            <div class="behaviours-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Behaviours are the units of concurrent work. A behaviour names the cowns it needs, the runtime grants them atomically (all at once or not at all), the behaviour runs with exclusive access to all of them, then releases. This is how work happens in BoC.</p>
+        </aside>
+      </section>
+
+      <!-- ─── Guarantees: actor gifts kept + the new BoC addition ──── -->
+
+      <!-- Still data-race free -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">Still</span> data-race free.</h2>
+        <aside class="notes">
+          <p>First of the kept gifts. The actor model gave us data-race freedom by construction. BoC keeps it &mdash; behaviours hold exclusive access to their cowns while they run, so no two behaviours touch the same memory at the same time.</p>
+        </aside>
+      </section>
+
+      <!-- Still deadlock free -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">Still</span> deadlock free.</h2>
+        <aside class="notes">
+          <p>Another kept gift. Actors are deadlock-free because they don't take locks; they queue messages. BoC keeps the property &mdash; atomic acquisition of all needed cowns up front means there's no partial-hold-and-wait that classical locking can fall into.</p>
+        </aside>
+      </section>
+
+      <!-- Still scalable -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">Still</span> scalable.</h2>
+        <aside class="notes">
+          <p>Last of the kept gifts. Independent behaviours operating on disjoint cowns run in parallel &mdash; same horizontal scaling story as actors, with finer-grained sharing.</p>
+        </aside>
+      </section>
+
+      <!-- The new thing: atomic across cowns -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">Atomic</span> across cowns.</h2>
+        <aside class="notes">
+          <p>The new addition. The thing actors don't give you. A single behaviour can hold multiple cowns at once, atomically, with no protocol &mdash; this is the missing piece that lets ACID semantics fall out naturally.</p>
+        </aside>
+      </section>
+
+      <!-- The thesis: an ACID DB in Pony — callback to the intro framing -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">An <span class="heading-accent">ACID DB</span> in Pony.</h2>
+        <aside class="notes">
+          <p>The talk's thesis, landing. We opened with this framing &mdash; "what would it take?" &mdash; and now the answer is on screen. BoC is what would take. The rest is showing the multi-table version of the JOIN running through one <code>when</code> block.</p>
+        </aside>
+      </section>
+
       <!-- Closing slide -->
       <section class="closing-slide" data-background-image="images/closing.png" data-background-size="cover" data-background-position="center" data-background-color="#e6d2a5">
       </section>
