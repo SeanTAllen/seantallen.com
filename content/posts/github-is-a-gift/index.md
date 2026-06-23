@@ -3,7 +3,7 @@ title: "GitHub Is a Gift"
 slug: "github-is-a-gift"
 date: "2026-06-23T16:00:00-04:00"
 draft: false
-tags: ["Stories"]
+tags: ["Oral Histories"]
 description: "GitHub has taken a beating lately, but I'm old enough to remember when open source developers scrounged for the machines to test their code. From there, free CI looks like a gift."
 summary: "I remember the before times."
 imagePosition: "center 25%"
