@@ -1423,6 +1423,35 @@
   color: var(--deep-rust);
 }
 
+/* Recap kicker — small uppercase tag above a brought-back slide's
+   heading, so the gift-parade slides read as "still true in BOC"
+   rather than as accidental backward navigation. */
+.reveal .recap-kicker {
+  color: var(--deep-rust);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+/* Reception pivot portraits — the final difference, in the standard
+   content-slide image+text format. */
+.reveal .reception-execute-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/reception-execute.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .reception-ticket-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/reception-ticket.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
 .reveal .content-list {
   list-style: none;
   padding: 0;

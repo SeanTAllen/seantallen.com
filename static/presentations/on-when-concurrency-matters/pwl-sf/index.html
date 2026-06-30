@@ -55,7 +55,7 @@
             <li>Talk about concurrency.</li>
             <li>Talk about safe concurrency.</li>
             <li>Talk about Pony quickly.</li>
-            <li>Talk about BoC quickly.</li>
+            <li>Talk about BOC quickly.</li>
           </ul>
           <p>But first, some history.</p>
         </aside>
@@ -91,14 +91,14 @@
         <aside class="notes">
           <ul>
             <li>Matt Parkinson + Sylvan Clebsch conversations: "what would Pony need to be a good database language?"</li>
-            <li>That question led to BoC</li>
-            <li>BoC is being implemented in Verona (Microsoft)</li>
+            <li>That question led to BOC</li>
+            <li>BOC is being implemented in Verona (Microsoft)</li>
           </ul>
         </aside>
       </section>
 
       <!-- ACID DB framing — depicts the Matt/Sylvan conversation that led
-           to BoC, framing the talk's evaluation criterion: can Pony build
+           to BOC, framing the talk's evaluation criterion: can Pony build
            an ACID database? Image is the placeholder version of the
            figures-at-a-chalkboard scene. -->
       <section class="acid-db-slide" data-background-color="#e6d2a5">
@@ -111,7 +111,7 @@
           </div>
         </div>
         <aside class="notes">
-          <p>This slide crystallizes the talk's evaluation criterion. The image depicts the Matt Parkinson / Sylvan Clebsch conversation at MSR about what Pony would need to be a good database language. The bar: ACID semantics. The rest of the talk evaluates actors (and then BoC) against that bar.</p>
+          <p>This slide crystallizes the talk's evaluation criterion. The image depicts the Matt Parkinson / Sylvan Clebsch conversation at MSR about what Pony would need to be a good database language. The bar: ACID semantics. The rest of the talk evaluates actors (and then BOC) against that bar.</p>
         </aside>
       </section>
 
@@ -1532,11 +1532,11 @@
            Cowns/Behaviours/guarantees/example come next.
            ================================================================ -->
 
-      <!-- Section divider: BoC -->
+      <!-- Section divider: BOC -->
       <section class="section-divider" data-background-color="#5fa3b2">
-        <h1 class="section-title">BoC</h1>
+        <h1 class="section-title">BOC</h1>
         <aside class="notes">
-          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BoC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
+          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BOC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
         </aside>
       </section>
 
@@ -1544,7 +1544,7 @@
       <section class="big-statement-slide" data-background-color="#e6d2a5">
         <h2 class="big-statement">The actor model,<br><span class="heading-accent">turned around.</span></h2>
         <aside class="notes">
-          <p>The framing. Sets up the audience's mental model before the code lands. In the actor model behavior and state are bound together &mdash; coordination across them becomes a protocol. BoC pulls them apart: the data (cowns) and the work (behaviours) are separate, and coordination is built into how they get put back together. Same primitives, rotated.</p>
+          <p>The framing. Sets up the audience's mental model before the code lands. In the actor model behavior and state are bound together &mdash; coordination across them becomes a protocol. BOC pulls them apart: the data (cowns) and the work (behaviours) are separate, and coordination is built into how they get put back together. Same primitives, rotated.</p>
         </aside>
       </section>
 
@@ -1591,33 +1591,7 @@
           </div>
         </div>
         <aside class="notes">
-          <p>Behaviours are the units of concurrent work. A behaviour names the cowns it needs, the runtime grants them atomically (all at once or not at all), the behaviour runs with exclusive access to all of them, then releases. This is how work happens in BoC.</p>
-        </aside>
-      </section>
-
-      <!-- ─── Guarantees: actor gifts kept + the new BoC addition ──── -->
-
-      <!-- Still data-race free -->
-      <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement"><span class="heading-accent">Still</span> data-race free.</h2>
-        <aside class="notes">
-          <p>First of the kept gifts. The actor model gave us data-race freedom by construction. BoC keeps it &mdash; behaviours hold exclusive access to their cowns while they run, so no two behaviours touch the same memory at the same time.</p>
-        </aside>
-      </section>
-
-      <!-- Still deadlock free -->
-      <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement"><span class="heading-accent">Still</span> deadlock free.</h2>
-        <aside class="notes">
-          <p>Another kept gift. Actors are deadlock-free because they don't take locks; they queue messages. BoC keeps the property &mdash; atomic acquisition of all needed cowns up front means there's no partial-hold-and-wait that classical locking can fall into.</p>
-        </aside>
-      </section>
-
-      <!-- Still scalable -->
-      <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement"><span class="heading-accent">Still</span> scalable.</h2>
-        <aside class="notes">
-          <p>Last of the kept gifts. Independent behaviours operating on disjoint cowns run in parallel &mdash; same horizontal scaling story as actors, with finer-grained sharing.</p>
+          <p>Behaviours are the units of concurrent work. A behaviour names the cowns it needs, the runtime grants them atomically (all at once or not at all), the behaviour runs with exclusive access to all of them, then releases. This is how work happens in BOC.</p>
         </aside>
       </section>
 
@@ -1625,15 +1599,219 @@
       <section class="big-statement-slide" data-background-color="#e6d2a5">
         <h2 class="big-statement"><span class="heading-accent">Atomic</span> across cowns.</h2>
         <aside class="notes">
-          <p>The new addition. The thing actors don't give you. A single behaviour can hold multiple cowns at once, atomically, with no protocol &mdash; this is the missing piece that lets ACID semantics fall out naturally.</p>
+          <p>The new addition &mdash; the thing actors don't give you. A single behaviour holds multiple cowns at once, atomically, with no protocol. The missing piece that lets ACID semantics fall out.</p>
         </aside>
       </section>
 
-      <!-- The thesis landing: actor model gifts kept, plus ACID -->
+      <!-- The thesis, asserted up front; the refrain that follows backs it up -->
       <section class="big-statement-slide" data-background-color="#e6d2a5">
         <h2 class="big-statement">Actor gifts.<br>Plus <span class="heading-accent">ACID</span>.</h2>
         <aside class="notes">
-          <p>The talk's thesis, landing. The actor model gave us a lot &mdash; we kept all of that. BoC adds the one piece that was missing: atomic operations across multiple resources, which is the thing that makes ACID semantics possible. Not "an ACID DB in Pony" &mdash; BoC isn't Pony, it's been implemented in Verona &mdash; but the means to build an ACID database without giving up everything the actor model already gave us.</p>
+          <p>The thesis, stated up front. We kept the actor gifts and added ACID. The refrain that follows backs up the "actor gifts" half &mdash; here are the gifts, one by one. Not "an ACID DB in Pony" &mdash; BOC is Verona, not Pony &mdash; but the means to build an ACID database without giving up what the actor model gave us.</p>
+        </aside>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           Gift refrain — having claimed "actor gifts plus ACID" above,
+           back it up by bringing back every actor goodness slide BOC keeps,
+           relabeled with its BOC subject (Cowns / Behaviours). Ends on
+           "the one change". DRAFT for Sean to react to.
+           ════════════════════════════════════════════════════════════════ -->
+
+      <!-- Recap framing -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">What <span class="heading-accent">carries over</span>?</h2>
+        <aside class="notes">
+          <p>Sets up the recap. Everything that follows is a callback to the actor goodness slides from earlier &mdash; the point is that BOC keeps all of it. The "still true" tag on each slide tells a cold reader this is a recap, not backward navigation.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: cowns receive messages (brought over from "actors pass messages") -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">receive messages</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Cowns receive messages &mdash; each cown has a mailbox, same as an actor. The affordance carries over: you still send a message to reach the data. What changed is what receipt means &mdash; we come back to that at the end.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: protect resources -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">protect resources</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Cowns protect their contents &mdash; files, sockets, data structures &mdash; same as actors did.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: own their memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">rent their memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A cown's memory is rented, not owned outright. A behaviour holds it for the length of its run, then gives it back. One tenant at a time.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: no globals -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">globals</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recap: no locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">locks</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>No user-visible locks. The runtime acquires cowns for you; you never write a lock.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: no shared state -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">shared state</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recap: sequential reasoning -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours allow<br><span class="heading-accent">sequential reasoning</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="sequential-reasoning-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Inside a behaviour you reason sequentially &mdash; one step after another, with exclusive access to your cowns.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: scale horizontally -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours can<br><span class="heading-accent">scale horizontally</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actors-provide-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Behaviours over disjoint cowns run in parallel &mdash; same horizontal scaling, finer-grained sharing.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: deadlock-free -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours are<br><span class="heading-accent">deadlock-free</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="deadlock-free-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A behaviour acquires all its cowns at once, up front. No partial-hold-and-wait, so no deadlock.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: data race freedom -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours provide<br><span class="heading-accent">data race freedom</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-prevents-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A behaviour has exclusive access to its cowns while it runs. No two behaviours touch the same memory at the same time.</p>
+        </aside>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           DRAFT / DECISION PENDING — message-passing reframe (Sylvan's
+           framing). Pays off the word "behaviour" in the title. Keep the
+           compact version (this); defer the scheduling mechanics. Cut the
+           whole block if it runs long for 45 min.
+           ════════════════════════════════════════════════════════════════ -->
+
+      <!-- Pivot to the final difference, part 1: actor reception -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actor Model:<br>messaging is<br><span class="heading-accent">execution</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="reception-execute-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The full thing: message reception is execution in the actor model. Receiving a message and running are the same event &mdash; the actor executes the moment the message arrives.</p>
+        </aside>
+      </section>
+
+      <!-- Pivot to the final difference, part 2: BOC reception -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">BOC:<br>messaging is<br>a <span class="heading-accent">ticket</span> for execution</h2>
+          </div>
+          <div class="content-image">
+            <div class="reception-ticket-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The full thing: message reception is a ticket for a cown to be used in an execution by a behaviour. The message doesn't run anything on its own &mdash; it claims the cown, and a behaviour later runs using that cown.</p>
+        </aside>
+      </section>
+
+      <!-- The behaviour is the executor — pays off the title -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">The <span class="heading-accent">behaviour</span><br>is the executor.</h2>
+        <aside class="notes">
+          <p>The title payoff. The thread moved out of the actor and into the behaviour. The behaviour is the logical thread now &mdash; it's what runs, holding its tickets until it can. The executor is the behaviour, not the actor. That's the "behaviour-oriented" in Behaviour-Oriented Concurrency. Defer the rest &mdash; how tickets get ordered, when a behaviour actually fires &mdash; that's a talk of its own.</p>
         </aside>
       </section>
 

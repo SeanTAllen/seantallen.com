@@ -15,7 +15,7 @@ But the actor model has an Achilles heel. Any operation that needs to atomically
 
 Behaviour-Oriented Concurrency is a paradigm that keeps what the actor model gets right and rethinks what it gets wrong. Instead of state-bound actors trading messages, you have behaviours: units of concurrent work that atomically acquire whatever resources they need to run. The runtime guarantees the acquisition is atomic, the execution is exclusive, and the ordering is consistent. No protocol. No state machines arguing across the wire. Just `when (x, y, z) { ... }`.
 
-This talk works through the BoC paper from OOPSLA 2023, by Cheeseman, Parkinson, Clebsch, and friends. We start with what the actor model gets right and why so many people built systems around it. We walk to where it falls down. Then we get to how BoC fixes the gap without giving up what makes the actor model worth using.
+This talk works through the BOC paper from OOPSLA 2023, by Cheeseman, Parkinson, Clebsch, and friends. We start with what the actor model gets right and why so many people built systems around it. We walk to where it falls down. Then we get to how BOC fixes the gap without giving up what makes the actor model worth using.
 
 ## Versions of this talk
 
@@ -23,8 +23,8 @@ This talk works through the BoC paper from OOPSLA 2023, by Cheeseman, Parkinson,
 
 ## Links
 
-* [bocpy - a Python implementation of BoC](https://microsoft.github.io/bocpy/)
-* [Verona - the language BoC is being implemented in](https://github.com/microsoft/verona)
+* [bocpy - a Python implementation of BOC](https://microsoft.github.io/bocpy/)
+* [Verona - the language BOC is being implemented in](https://github.com/microsoft/verona)
 * [Pony](https://www.ponylang.io/)
 
 ## References
