@@ -1174,7 +1174,7 @@
       <section class="content-slide" data-background-color="#e6d2a5">
         <div class="content-grid">
           <div class="content-text">
-            <h2 class="content-heading">It's a <span class="heading-accent">race</span></h2>
+            <h2 class="content-heading is-big">It's a <span class="heading-accent">race</span></h2>
           </div>
           <div class="content-image">
             <div class="race-condition-portrait"></div>
@@ -1192,6 +1192,21 @@
         <h1 class="section-title">Locks</h1>
         <aside class="notes">
           <p>Section divider. To make a JOIN atomic across multiple actors, we need to coordinate access &mdash; we need locks. Specifically, we need a distributed locking protocol because the data isn't in one place.</p>
+        </aside>
+      </section>
+
+      <!-- Two-phase locking intro — names the protocol before the diagram -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Two-phase<br><span class="heading-accent">locking</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="two-phase-locking-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Name the protocol before the diagram. Acquire all the locks, do the work, release them &mdash; a growing phase and a shrinking phase.</p>
         </aside>
       </section>
 
@@ -1742,11 +1757,8 @@
            talked over. Closes the pain section. Placeholder image. -->
       <section class="bridge-slide" data-background-image="images/lock-burden.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
         <aside class="notes">
-          <ul>
-            <li>Two-phase locking is a sound protocol. The weird part isn't the protocol &mdash; it's that you built the whole thing by hand, for one operation.</li>
-            <li>And that was the happy path. Wrong lock order deadlocks. A lock holder crashes and everyone waits.</li>
-            <li>The actor model gave you no primitive for this. Even done right, this is the machinery one JOIN costs.</li>
-          </ul>
+          <p>That's complex AND slow.</p>
+          <p>And it hands back one of the actor model's gifts: no locks. Now there's lock order to get right, and livelock is back on the table.</p>
         </aside>
       </section>
 

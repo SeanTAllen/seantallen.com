@@ -1407,6 +1407,13 @@
   border: 4px solid var(--ink-black);
 }
 
+.reveal .two-phase-locking-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/two-phase-locking.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
 .reveal .regions-portrait {
   width: 600px;
   height: 600px;
@@ -1438,6 +1445,12 @@
   text-transform: none;
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+
+/* Oversized content heading — for short, punchy phrases that would
+   otherwise look lost in the text column next to their image. */
+.reveal .content-heading.is-big {
+  font-size: 3.2em;
 }
 
 .reveal .heading-accent {
