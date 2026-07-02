@@ -320,7 +320,7 @@
 
       <!-- Transition: what does it look like? -->
       <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement">Actors on <span class="heading-accent">ACID</span></h2>
+        <h2 class="big-statement"><span class="heading-accent">ACID</span> with Actors</h2>
       </section>
 
       <!-- Tables as actors — Frame 1: base, all three stations sitting there. -->
@@ -1738,7 +1738,32 @@
         </aside>
       </section>
 
-      <!-- The `when` reveal — the tease that closes the pain section -->
+      <!-- Full-screen burden image — the felt cost of hand-rolled locking,
+           talked over. Closes the pain section. Placeholder image. -->
+      <section class="bridge-slide" data-background-image="images/lock-burden.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <ul>
+            <li>Two-phase locking is a sound protocol. The weird part isn't the protocol &mdash; it's that you built the whole thing by hand, for one operation.</li>
+            <li>And that was the happy path. Wrong lock order deadlocks. A lock holder crashes and everyone waits.</li>
+            <li>The actor model gave you no primitive for this. Even done right, this is the machinery one JOIN costs.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           Behaviour-Oriented Concurrency. Divider opens on the dream
+           ("what if a JOIN looked like this?"), then explains how.
+           ================================================================ -->
+
+      <!-- Section divider: BOC -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">BOC</h1>
+        <aside class="notes">
+          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BOC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
+        </aside>
+      </section>
+
+      <!-- The `when` reveal — opens BOC on the dream -->
       <section class="code-slide" data-background-color="#e6d2a5">
         <div class="code-stack">
           <h2 class="code-header">What if a JOIN could look like <span class="heading-accent">this</span>?</h2>
@@ -1751,20 +1776,7 @@
           </div>
         </div>
         <aside class="notes">
-          <p>The tease that closes the pain section. The JOIN we just spent 12 messages of protocol on, written as one block. The <code>when</code> keyword takes the cowns it needs, the body runs with exclusive access to all of them, and the result drops out. No LOCK / GRANTED / READ / DATA / RELEASE / RELEASED choreography. Show the magic; the next section names it and explains how.</p>
-        </aside>
-      </section>
-
-      <!-- ================================================================
-           Behaviour-Oriented Concurrency. Divider goes straight into
-           "break the actor into its parts" — the mechanism behind the tease.
-           ================================================================ -->
-
-      <!-- Section divider: BOC -->
-      <section class="section-divider" data-background-color="#5fa3b2">
-        <h1 class="section-title">BOC</h1>
-        <aside class="notes">
-          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BOC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
+          <p>The dream. The JOIN we just spent 12 messages of protocol on, written as one block. The <code>when</code> keyword takes the cowns it needs, the body runs with exclusive access to all of them, and the result drops out. No LOCK / GRANTED / READ / DATA / RELEASE / RELEASED choreography. How? By breaking the actor apart.</p>
         </aside>
       </section>
 
