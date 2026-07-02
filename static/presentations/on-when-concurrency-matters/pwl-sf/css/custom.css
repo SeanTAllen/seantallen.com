@@ -1393,6 +1393,20 @@
   border: 4px solid var(--ink-black);
 }
 
+.reveal .break-parts-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/break-parts.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .regions-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/regions.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
 .reveal .cowns-portrait {
   width: 600px;
   height: 600px;
