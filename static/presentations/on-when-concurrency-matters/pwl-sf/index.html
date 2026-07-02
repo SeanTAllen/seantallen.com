@@ -1170,6 +1170,21 @@
         </aside>
       </section>
 
+      <!-- Race condition — names the problem, pivots into Locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">It's a <span class="heading-accent">race</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="race-condition-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Actors don't prevent race conditions. They killed data races &mdash; not this. The JOIN result depends on the interleaving: the timing of our reads against someone else's writes. To make it go away, we have to coordinate access.</p>
+        </aside>
+      </section>
+
       <!-- ================================================================
            Section divider: we need locking
            ================================================================ -->
@@ -1375,7 +1390,7 @@
         </aside>
       </section>
 
-      <!-- 2PL Frame 6: phase 2 starts — read both. -->
+      <!-- 2PL Frame 6a: read phase — READ to Users -->
       <section class="diagram-slide" data-background-color="#e6d2a5">
         <div class="diagram-stack">
           <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
@@ -1383,7 +1398,7 @@
             <div class="sequence-scene">
               <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
                 <defs>
-                  <marker id="ah-seq-6" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                  <marker id="ah-seq-6a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
                     <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
                   </marker>
                 </defs>
@@ -1399,29 +1414,27 @@
                 <text class="seq-phase-label" x="250" y="195">acquire</text>
 
                 <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-6)"/>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-6a)"/>
                 <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-6)"/>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-6a)"/>
                 <text class="seq-msg-label" x="425" y="360">GRANTED</text>
-                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-6)"/>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-6a)"/>
                 <text class="seq-msg-label" x="650" y="430">GRANTED</text>
-                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-6)"/>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-6a)"/>
 
                 <text class="seq-phase-label" x="250" y="500">read</text>
                 <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
-                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-6)"/>
-                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
-                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-6)"/>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-6a)"/>
               </svg>
             </div>
           </div>
         </div>
         <aside class="notes">
-          <p>Now the work: actually read the data. The Client sends a READ to each actor. The locks held through the growing phase mean the data is stable &mdash; no one else can mutate either table while we're reading.</p>
+          <p>Now the work: read the data. READ to Users. The locks held through the growing phase keep the data stable while we read.</p>
         </aside>
       </section>
 
-      <!-- 2PL Frame 7: data comes back from both. -->
+      <!-- 2PL Frame 6b: + READ to Orders -->
       <section class="diagram-slide" data-background-color="#e6d2a5">
         <div class="diagram-stack">
           <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
@@ -1429,7 +1442,7 @@
             <div class="sequence-scene">
               <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
                 <defs>
-                  <marker id="ah-seq-7" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                  <marker id="ah-seq-6b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
                     <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
                   </marker>
                 </defs>
@@ -1445,34 +1458,129 @@
                 <text class="seq-phase-label" x="250" y="195">acquire</text>
 
                 <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-6b)"/>
                 <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-6b)"/>
                 <text class="seq-msg-label" x="425" y="360">GRANTED</text>
-                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-6b)"/>
                 <text class="seq-msg-label" x="650" y="430">GRANTED</text>
-                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-6b)"/>
 
                 <text class="seq-phase-label" x="250" y="500">read</text>
                 <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
-                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-6b)"/>
                 <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
-                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-6b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>And READ to Orders. Both reads are out.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 7a: + data back from Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-7a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-7a)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-7a)"/>
 
                 <text class="seq-msg-label" x="425" y="625">[ &hellip; ]</text>
-                <line class="seq-msg-line" x1="650" y1="645" x2="200" y2="645" marker-end="url(#ah-seq-7)"/>
-                <text class="seq-msg-label" x="650" y="675">[ &hellip; ]</text>
-                <line class="seq-msg-line" x1="1100" y1="695" x2="200" y2="695" marker-end="url(#ah-seq-7)"/>
+                <line class="seq-msg-line" x1="650" y1="645" x2="200" y2="645" marker-end="url(#ah-seq-7a)"/>
               </svg>
             </div>
           </div>
         </div>
         <aside class="notes">
-          <p>Both actors return their data. The Client now has consistent rows from both tables and can stitch them into the JOIN result. But the protocol isn't done &mdash; the locks are still held.</p>
+          <p>Users returns its rows.</p>
         </aside>
       </section>
 
-      <!-- 2PL Frame 8: shrinking phase — release the locks (next slide for space). -->
+      <!-- 2PL Frame 7b: + data back from Orders — reads done -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-7b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-7b)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-7b)"/>
+
+                <text class="seq-msg-label" x="425" y="625">[ &hellip; ]</text>
+                <line class="seq-msg-line" x1="650" y1="645" x2="200" y2="645" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="675">[ &hellip; ]</text>
+                <line class="seq-msg-line" x1="1100" y1="695" x2="200" y2="695" marker-end="url(#ah-seq-7b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Orders returns its rows. Both in hand &mdash; but the locks are still held.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8a: shrinking — RELEASE to Users -->
       <section class="diagram-slide" data-background-color="#e6d2a5">
         <div class="diagram-stack">
           <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
@@ -1480,7 +1588,7 @@
             <div class="sequence-scene">
               <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
                 <defs>
-                  <marker id="ah-seq-8" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                  <marker id="ah-seq-8a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
                     <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
                   </marker>
                 </defs>
@@ -1496,19 +1604,127 @@
 
                 <text class="seq-phase-label" x="250" y="195">release</text>
                 <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8)"/>
-                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
-                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8)"/>
-                <text class="seq-msg-label" x="425" y="360">RELEASED</text>
-                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-8)"/>
-                <text class="seq-msg-label" x="650" y="430">RELEASED</text>
-                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-8)"/>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8a)"/>
               </svg>
             </div>
           </div>
         </div>
         <aside class="notes">
-          <p>The shrinking phase: release the locks. Two RELEASE messages out, two RELEASED acknowledgments back. Until these complete, every other client trying to touch Users or Orders is blocked. Held locks are a global serialization point.</p>
+          <p>The shrinking phase begins: release locks. The Client sends RELEASE to Users. Once a lock is released it can't be re-taken &mdash; that's the shrinking discipline.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8b: + RELEASE to Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8b)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>And RELEASE to Orders. Both release requests are out.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8c: + RELEASED from Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8c" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8c)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8c)"/>
+                <text class="seq-msg-label" x="425" y="360">RELEASED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-8c)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Users acknowledges: RELEASED. Its lock is free.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8d: + RELEASED from Orders — all four -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8d" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="425" y="360">RELEASED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="650" y="430">RELEASED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-8d)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Orders acknowledges: RELEASED. Both locks free &mdash; only now can anyone else touch these tables. Twelve messages, start to finish.</p>
         </aside>
       </section>
 
