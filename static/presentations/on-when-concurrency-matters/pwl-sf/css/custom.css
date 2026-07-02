@@ -1,0 +1,1522 @@
+/*
+ * Behaviour-Oriented Concurrency — Custom Theme
+ *
+ * Visual identity: 1960s "World of Tomorrow" mid-century children's
+ * book illustration with an Albuquerque/Southwestern atomic-age
+ * twist. Pueblo Revival meets Googie. Sandia Mountains optional.
+ *
+ * Palette (provisional — sampled by eye from the cover; refine):
+ *
+ *   --sky-turquoise:  #5fa3b2   sky, primary cool
+ *   --terracotta:     #b8643c   warm accent / building reds
+ *   --ochre:          #c8a060   sandy ground tone
+ *   --adobe-cream:    #e6d2a5   building cream, body text light
+ *   --sage:           #6a8255   cacti / vegetation
+ *   --deep-rust:      #8a3823   shadows / accent dark warm
+ *   --ink-black:      #1f1a14   outlines, text on light, drop shadow
+ */
+
+:root {
+  --sky-turquoise: #5fa3b2;
+  --terracotta: #b8643c;
+  --ochre: #c8a060;
+  --adobe-cream: #e6d2a5;
+  --sage: #6a8255;
+  --deep-rust: #8a3823;
+  --ink-black: #1f1a14;
+  --highlight-yellow: #e8b830;
+}
+
+/* ── Base ── */
+
+.reveal {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ink-black);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+/* ── Cover slide ── */
+
+.reveal .slides section.cover-slide {
+  height: 100%;
+}
+
+.reveal .cover-title {
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  display: inline-block;
+  background-color: var(--terracotta);
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.15em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin: 0;
+  padding: 20px 35px;
+  border: 3px solid var(--ink-black);
+}
+
+.reveal .cover-title .cover-on {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.65em;
+  font-style: italic;
+  font-weight: 400;
+  margin-right: 0.25em;
+  vertical-align: 0.4em;
+}
+
+/* ── About slide ── */
+
+.reveal .slides section.about-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .about-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .about-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .about-name {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.2em;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0 0 0.1em 0;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.reveal .about-url {
+  color: var(--deep-rust);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.6em;
+  font-style: italic;
+  margin: 0 0 1.4em 0;
+}
+
+.reveal .about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reveal .about-list li {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85em;
+  font-weight: 400;
+  margin: 0.5em 0;
+  padding-left: 1.4em;
+  position: relative;
+  line-height: 1.3;
+}
+
+.reveal .about-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.55em;
+  height: 0.55em;
+  background-color: var(--terracotta);
+  border-radius: 50%;
+}
+
+.reveal .about-image {
+  flex: 0 0 auto;
+}
+
+.reveal .about-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/about-me.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Topic intro slide ── */
+
+.reveal .slides section.topic-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .topic-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .topic-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .topic-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .topic-heading .topic-on {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 0.65em;
+  font-style: italic;
+  font-weight: 400;
+  margin-right: 0.25em;
+  vertical-align: 0.4em;
+}
+
+.reveal .topic-image {
+  flex: 0 0 auto;
+}
+
+.reveal .topic-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/mail-sorting.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Concurrency intro slide (image + text grid, matches About me /
+       Topic intro / Some History rhythm) ── */
+
+.reveal .slides section.concurrency-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .concurrency-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .concurrency-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .concurrency-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .concurrency-image {
+  flex: 0 0 auto;
+}
+
+.reveal .concurrency-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/concurrency.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Archaeology / "Some History" slide ── */
+
+.reveal .slides section.archaeology-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .archaeology-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .archaeology-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .archaeology-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .archaeology-image {
+  flex: 0 0 auto;
+}
+
+.reveal .archaeology-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/archaeology.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── ACID DB intro slide (image + text grid, matches the rhythm of
+       the other intro slides) ── */
+
+.reveal .slides section.acid-db-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .acid-db-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .acid-db-text {
+  flex: 1;
+  max-width: 900px;
+}
+
+.reveal .acid-db-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .acid-db-image {
+  flex: 0 0 auto;
+}
+
+.reveal .acid-db-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/acid-db.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Section divider slides ── */
+
+.reveal .slides section.section-divider {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .section-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--terracotta);
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3.6em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  padding: 40px 70px;
+  border: 4px solid var(--ink-black);
+  border-left: none;
+  border-right: none;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* ── Generic content slide (heading + bullet list) ── */
+
+.reveal .slides section.content-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .content-stack {
+  height: 100%;
+  padding: 100px 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 40px;
+}
+
+.reveal .content-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  padding: 80px;
+  box-sizing: border-box;
+}
+
+.reveal .content-text {
+  flex: 1;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.reveal .content-image {
+  flex: 0 0 auto;
+}
+
+.reveal .actor-basics-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actor-booths.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .content-lead {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.reveal .data-race-freedom-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/data-race-freedom.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .actors-provide-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actors-provide.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* ── Plaque slide (Option A comparison) ── */
+
+.reveal .slides section.plaque-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .plaque {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--terracotta);
+  border: 8px solid var(--ink-black);
+  padding: 60px 120px;
+  box-shadow: 10px 10px 0 rgba(31, 26, 20, 0.35);
+}
+
+.reveal .plaque::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  border: 2px solid var(--adobe-cream);
+  pointer-events: none;
+}
+
+/* Corner rivets — small dark dots at each corner of the plaque */
+.reveal .plaque-rivet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--ink-black);
+  border-radius: 50%;
+  border: 2px solid var(--adobe-cream);
+  z-index: 2;
+}
+.reveal .plaque-rivet-tl { top: 18px; left: 18px; }
+.reveal .plaque-rivet-tr { top: 18px; right: 18px; }
+.reveal .plaque-rivet-bl { bottom: 18px; left: 18px; }
+.reveal .plaque-rivet-br { bottom: 18px; right: 18px; }
+
+/* Decorative ornament with rules either side of an atomic symbol */
+.reveal .plaque-ornament {
+  text-align: center;
+  font-size: 1em;
+  color: var(--adobe-cream);
+  position: relative;
+  margin: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.reveal .plaque-ornament::before,
+.reveal .plaque-ornament::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--adobe-cream);
+  max-width: 90px;
+}
+
+.reveal .plaque-ornament-top {
+  margin-bottom: 30px;
+}
+
+.reveal .plaque-ornament-bottom {
+  margin-top: 30px;
+}
+
+.reveal .plaque-text {
+  color: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  margin: 0;
+  padding: 0 30px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Plaque inside a content-grid column (third comparison) — drop the
+   absolute centering and shrink so it sits cleanly next to an image. */
+
+.reveal .plaque-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal .plaque-column .plaque {
+  position: static;
+  transform: none;
+  padding: 40px 60px;
+  box-shadow: 8px 8px 0 rgba(31, 26, 20, 0.35);
+}
+
+.reveal .plaque-column .plaque-text {
+  font-size: 1.6em;
+  padding: 0 20px;
+}
+
+.reveal .plaque-column .plaque-ornament-top {
+  margin-bottom: 22px;
+}
+
+.reveal .plaque-column .plaque-ornament-bottom {
+  margin-top: 22px;
+}
+
+.reveal .plaque-column .plaque-rivet {
+  width: 11px;
+  height: 11px;
+}
+
+.reveal .plaque-column .plaque-rivet-tl,
+.reveal .plaque-column .plaque-rivet-tr { top: 14px; }
+.reveal .plaque-column .plaque-rivet-bl,
+.reveal .plaque-column .plaque-rivet-br { bottom: 14px; }
+.reveal .plaque-column .plaque-rivet-tl,
+.reveal .plaque-column .plaque-rivet-bl { left: 14px; }
+.reveal .plaque-column .plaque-rivet-tr,
+.reveal .plaque-column .plaque-rivet-br { right: 14px; }
+
+.reveal .sequential-reasoning-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/sequential-reasoning.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .no-more-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/no-more.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .deadlock-free-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/deadlock-free.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+/* Diagram-format slides — header at top, larger diagram area below. */
+
+.reveal .slides section.diagram-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .diagram-stack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 100px;
+  box-sizing: border-box;
+  gap: 30px;
+}
+
+.reveal .diagram-header {
+  flex: 0 0 auto;
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid var(--terracotta);
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .diagram-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.reveal .diagram-portrait {
+  width: 100%;
+  height: 100%;
+  background-color: var(--ochre);
+  border: 4px solid var(--ink-black);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Per-slide diagram backgrounds will be added when each diagram lands. */
+
+/* HTML/CSS structural diagrams (replacing Mermaid). */
+
+/* Slide 1: Each table is an actor — three stations, each a circle (actor)
+   over a rectangle (table) with row hints. */
+
+.reveal .actor-stations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  width: 100%;
+  height: 100%;
+}
+
+.reveal .actor-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 0 36px 30px 36px;
+  border: 3px solid var(--ink-black);
+  border-radius: 18px;
+  margin-top: 120px;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  position: relative;  /* anchor for the bounding-box highlight pseudo */
+}
+
+.reveal .actor-circle {
+  width: 240px;
+  height: 240px;
+  margin-top: -120px;
+  border-radius: 50%;
+  border: 4px solid var(--ink-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.reveal .actor-rect {
+  width: 220px;
+  height: 220px;
+  border: 4px solid var(--ink-black);
+  background-color: var(--adobe-cream);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 38px,
+    rgba(31, 26, 20, 0.18) 38px,
+    rgba(31, 26, 20, 0.18) 40px
+  );
+}
+
+.reveal .actor-station.actor-users     .actor-circle { background-color: var(--terracotta); color: var(--adobe-cream); }
+.reveal .actor-station.actor-users     .actor-rect   { border-top: 10px solid var(--terracotta); }
+
+.reveal .actor-station.actor-orders    .actor-circle { background-color: var(--sage);       color: var(--adobe-cream); }
+.reveal .actor-station.actor-orders    .actor-rect   { border-top: 10px solid var(--sage); }
+
+.reveal .actor-station.actor-stock     .actor-circle { background-color: var(--ochre);      color: var(--adobe-cream); }
+.reveal .actor-station.actor-stock     .actor-rect   { border-top: 10px solid var(--ochre); }
+
+/* Query scene: Client circle ↔ Users actor station with a single
+   message arrow between them.
+
+   Layout:
+   - flex row with align-items: flex-start. The actor-station's
+     margin-top: 120px combined with the actor-circle's margin-top:
+     -120px puts the actor circle at row top (y=0). The bare client
+     circle (no station wrapper) also sits at row top. Both circles
+     are 240px tall, so their vertical midline is at y=120.
+   - The .message-slot sits between them and reserves layout space
+     even when no arrow is present (Frames 1–3). When an arrow IS
+     present (Frames 4–5), the SVG line is positioned at the circles'
+     midline so the arrow visually connects circle to circle. */
+
+.reveal .query-scene {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .client-circle {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 4px solid var(--ink-black);
+  background-color: var(--sky-turquoise);
+  color: var(--adobe-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  font-weight: 700;
+  flex: 0 0 auto;
+  position: relative;  /* anchor for the bounding-box highlight pseudo */
+}
+
+/* Reserved horizontal channel for an arrow; holds layout space whether
+   or not an arrow is currently shown. margin-top pushes its contents
+   down to the circles' vertical midline (y≈120 within the row). */
+.reveal .message-slot {
+  flex: 1 1 380px;
+  max-width: 480px;
+  min-width: 260px;
+  align-self: flex-start;
+  margin-top: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.reveal .message-arrow-svg {
+  width: 100%;
+  height: 24px;
+  display: block;
+}
+
+.reveal .arrow-line {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+  fill: none;
+}
+
+.reveal .arrow-head {
+  fill: var(--ink-black);
+}
+
+.reveal .arrow-label {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.7em;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Code-style label — used inside the looping query animation so the
+   request/response text reads as code/data, not as prose. System
+   monospace stack avoids an extra font load. */
+.reveal .arrow-label-code {
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 0.78em;
+  letter-spacing: -0.01em;
+}
+
+/* Looping query animation: two arrow+label pairs (query and data)
+   stacked on top of each other in the same slot, alternating opacity
+   on a shared cycle so the audience sees an endless back-and-forth
+   conversation. CSS Grid puts both children in the same cell so they
+   overlap precisely. */
+.reveal .message-loop-stack {
+  display: grid;
+  grid-template-areas: "stack";
+  width: 100%;
+}
+
+.reveal .message-loop {
+  grid-area: stack;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reveal .message-loop-query {
+  animation: query-loop 5s ease-in-out infinite;
+}
+
+.reveal .message-loop-data {
+  animation: data-loop 5s ease-in-out infinite;
+}
+
+/* 5s cycle: each arrow fades in over ~400ms, holds visible ~1.6s,
+   fades out over ~500ms, then the other arrow does the same. The
+   wider fade window (vs the original 5%) gives the transition more
+   weight so the flip reads as a gentler back-and-forth, not a snap. */
+@keyframes query-loop {
+  0%, 100% { opacity: 0; }
+  8%, 40%  { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes data-loop {
+  0%, 50%  { opacity: 0; }
+  58%, 90% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Spotlight ring: when an entity is highlighted, a deep-rust ring
+   surrounds the entity's existing shape via box-shadow. Doesn't
+   shift layout and follows border-radius (so circles get a circular
+   ring). Highlight goes on the actor-circle (not the actor-station)
+   for the in-deck actor since the circle is the audience-facing
+   "actor identity" element. The ring breathes via a spread-pulse
+   keyframe so it draws the eye even when the slide is otherwise
+   static. */
+@keyframes spotlight-pulse {
+  0%, 100% { box-shadow: 0 0 0 10px var(--deep-rust); }
+  50%      { box-shadow: 0 0 0 18px var(--deep-rust); }
+}
+
+.reveal .client-circle.highlighted,
+.reveal .actor-station .actor-circle.highlighted,
+.reveal .actor-station .actor-rect.highlighted {
+  box-shadow: 0 0 0 10px var(--deep-rust);
+  animation: spotlight-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── JOIN scene (pure SVG) ─────────────────────────────────────────
+   Everything in one SVG with viewBox 1500×800 so coordinates are
+   deterministic. No CSS box-model interaction.
+
+   Entity positions in SVG user units:
+     Client circle: cx=200, cy=400, r=120  (left, vertically centered)
+     Users  circle: cx=1300, cy=100, r=65  (top right, slim)
+     Users  table:  x=1245, y=180, w=110, h=110
+     Orders circle: cx=1300, cy=580, r=65  (bottom right, slim)
+     Orders table:  x=1245, y=660, w=110, h=110
+
+   Arrow tangent endpoints (line from circle edge to circle edge,
+   then end pulled back 12u for arrowhead clearance):
+     Client→Users:  (316, 369) → (1225, 120)
+     Client→Orders: (318, 419) → (1224, 568)
+     Users→Client:  (1237, 117) → (328, 366)
+     Orders→Client: (1236, 570) → (330, 421)
+   Label midpoints:
+     Client↔Users:  (770, 244)
+     Client↔Orders: (771, 494) */
+
+.reveal .join-svg {
+  width: 1500px;
+  height: 800px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Client (full size) */
+.reveal .join-svg .jsvg-client {
+  fill: var(--sky-turquoise);
+  stroke: var(--ink-black);
+  stroke-width: 4;
+}
+.reveal .join-svg .jsvg-client-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Slim actor circles */
+.reveal .join-svg .jsvg-users-circle {
+  fill: var(--terracotta);
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+.reveal .join-svg .jsvg-orders-circle {
+  fill: var(--sage);
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+.reveal .join-svg .jsvg-actor-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Slim actor tables (rect with horizontal lines + color stripe + border) */
+.reveal .join-svg .jsvg-table-bg     { fill: var(--adobe-cream); }
+.reveal .join-svg .jsvg-table-border { fill: none; stroke: var(--ink-black); stroke-width: 3; }
+.reveal .join-svg .jsvg-table-line   { stroke: rgba(31, 26, 20, 0.18); stroke-width: 1; }
+.reveal .join-svg .jsvg-stripe-users  { fill: var(--terracotta); }
+.reveal .join-svg .jsvg-stripe-orders { fill: var(--sage); }
+
+/* Arrows */
+.reveal .join-svg .jsvg-arrow-line {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+  fill: none;
+}
+.reveal .join-svg .jsvg-arrow-head {
+  fill: var(--ink-black);
+}
+
+/* SQL/data label (group: rect background + text on top) */
+.reveal .join-svg .jsvg-label-bg {
+  fill: var(--adobe-cream);
+}
+.reveal .join-svg .jsvg-label-text {
+  fill: var(--ink-black);
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Highlight ring for the Client (Frame 6 — combining locally) */
+.reveal .join-svg .jsvg-highlight-ring {
+  fill: none;
+  stroke: var(--deep-rust);
+  stroke-width: 10;
+  animation: jsvg-highlight-pulse 1.5s ease-in-out infinite;
+}
+@keyframes jsvg-highlight-pulse {
+  0%, 100% { stroke-width: 8; }
+  50%      { stroke-width: 16; }
+}
+
+/* ── Interleaving timeline scene (pure SVG) ──────────────────────────
+   Two horizontal arrows representing concurrent participants over time.
+   Top: Our Client (turquoise dots = read operations)
+   Bottom: Other Writer (deep-rust dots = write operations)
+   Yellow ring (highlight color, distinct from entity palette) walks
+   through key moments to anchor the speaker's narration. */
+
+.reveal .timeline-svg {
+  width: 1500px;
+  height: 800px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.reveal .timeline-svg .tl-label {
+  fill: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  text-anchor: start;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-arrow {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+  fill: none;
+}
+
+.reveal .timeline-svg .tl-arrow-head {
+  fill: var(--ink-black);
+}
+
+.reveal .timeline-svg .tl-dot {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+}
+
+.reveal .timeline-svg .tl-dot-client {
+  fill: var(--sky-turquoise);
+}
+
+.reveal .timeline-svg .tl-dot-writer {
+  fill: var(--deep-rust);
+}
+
+.reveal .timeline-svg .tl-dot-text {
+  fill: var(--adobe-cream);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-dot-label {
+  fill: var(--ink-black);
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .timeline-svg .tl-highlight {
+  stroke: var(--highlight-yellow);
+  stroke-width: 7;
+  fill: none;
+  animation: tl-highlight-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tl-highlight-pulse {
+  0%, 100% { stroke-width: 7; }
+  50%      { stroke-width: 13; }
+}
+
+/* ── (legacy hybrid HTML/CSS+SVG approach for the JOIN scene — kept
+       for now in case the SVG rebuild needs to fall back) ────────── */
+   Client (full size) on the left; Users and Orders as slimmed-down
+   actor stations stacked on the right. The slimmed variant uses a
+   smaller circle and table since the iconography ("circle = actor,
+   rect = data the actor owns") is already established earlier in
+   the deck — we don't need to teach it again, just reference it.
+
+   Layout gives the long horizontal middle to the arrows + their
+   inline SQL/data labels.
+
+   Scene is 1500×800. Coordinates used by the overlay SVG:
+     Client circle center  = (200, 400)   (left, vertically centered; r=120)
+     Users  circle center  = (1380, 65)   (top-right; r=65 slimmed)
+     Orders circle center  = (1380, 524)  (bottom-right; r=65 slimmed)
+
+   Tangent endpoints (line from Client edge to actor edge):
+     Client→Users:  (315, 367) → (1317, 83)
+     Client→Orders: (319, 413) → (1315, 517)
+   Receiving-end pull-back (18u along line) so the arrowhead tip
+   lands cleanly outside the destination circle:
+     Client→Users  arrow ends at (1300, 88)
+     Client→Orders arrow ends at (1297, 515)
+     Users→Client  arrow ends at (332, 362)
+     Orders→Client arrow ends at (337, 415)
+
+   Arrow midpoints (label positions):
+     Client↔Users  midline ≈ (810, 225)
+     Client↔Orders midline ≈ (810, 465)
+
+   The actor-station's default margin-top: 120 (which lifts its
+   popped circle into the layout) is overridden to 0 here because
+   absolute positioning handles the offset directly. */
+
+.reveal .join-scene {
+  position: relative;
+  width: 1500px;
+  height: 800px;
+  margin: 0 auto;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  flex-shrink: 0;  /* never compress: keeps actor positions matching arrow coords */
+}
+
+.reveal .join-scene .join-client-pos {
+  position: absolute;
+  top: 280px;  /* 240px circle centered vertically: scene-h/2 - circle-r = 400 - 120 */
+  left: 80px;
+}
+
+.reveal .join-scene .join-users-pos {
+  position: absolute;
+  top: 65px;  /* slimmed circle pops 65 above station box; box top here, circle top at 0 */
+  right: 80px;
+  margin-top: 0;
+}
+
+.reveal .join-scene .join-orders-pos {
+  position: absolute;
+  bottom: 0;
+  right: 80px;
+  margin-top: 0;
+}
+
+/* Slimmed actor variant — used inside .join-scene where space is tight
+   and the icon is a callback to the established vocabulary, not a
+   primary teaching tool. About half the size of the full version. */
+.reveal .join-scene .actor-station {
+  padding: 0 20px 16px 20px;
+  gap: 14px;
+  border-width: 2px;
+  border-radius: 12px;
+}
+
+.reveal .join-scene .actor-circle {
+  width: 130px;
+  height: 130px;
+  margin-top: -65px;
+  border-width: 3px;
+  font-size: 0.9em;
+}
+
+.reveal .join-scene .actor-rect {
+  width: 110px;
+  height: 110px;
+  border-width: 3px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 22px,
+    rgba(31, 26, 20, 0.18) 22px,
+    rgba(31, 26, 20, 0.18) 24px
+  );
+}
+
+/* Override per-actor top stripe to a thinner band proportional to
+   the slimmed rectangle. */
+.reveal .join-scene .actor-station.actor-users  .actor-rect { border-top-width: 6px; }
+.reveal .join-scene .actor-station.actor-orders .actor-rect { border-top-width: 6px; }
+
+.reveal .join-arrows-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.reveal .join-arrows-overlay svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Looping JOIN: queries fire (both arrows down to actors), then
+   responses return (both arrows up to client). Same opacity-based
+   pattern as the single-table loop, just with a longer cycle since
+   there's more to read. */
+.reveal .join-loop-queries {
+  animation: join-queries-loop 5s ease-in-out infinite;
+}
+
+.reveal .join-loop-responses {
+  animation: join-responses-loop 5s ease-in-out infinite;
+}
+
+@keyframes join-queries-loop {
+  0%, 100% { opacity: 0; }
+  8%, 40%  { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes join-responses-loop {
+  0%, 50%  { opacity: 0; }
+  58%, 90% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Inline label for arrows in the JOIN scene. Renders as an HTML
+   element positioned over the SVG (absolute pixel coords match the
+   SVG's viewBox via parent's transform-free overlay). */
+.reveal .join-arrow-label {
+  position: absolute;
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  color: var(--ink-black);
+  background-color: var(--adobe-cream);
+  padding: 2px 10px;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* When a slide stacks the join-scene above an event log, switch the
+   diagram-area to a column layout so they sit one above the other
+   instead of being centered side-by-side. */
+.reveal .diagram-area-with-log {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Event log: the running list of messages exchanged so far. Lines
+   accumulate per frame (frame N = N lines visible). The most recent
+   line gets emphasized via .join-event-current so the audience's
+   eye knows what just happened. */
+.reveal .join-event-log {
+  width: 1300px;
+  margin: 0;
+  padding: 0 20px;
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  color: var(--ink-black);
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.reveal .join-event {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+.reveal .join-event-num {
+  color: var(--deep-rust);
+  font-weight: 700;
+  margin-right: 0.5em;
+}
+
+.reveal .join-event-current {
+  color: var(--deep-rust);
+  font-weight: 700;
+}
+
+/* ── Sequence diagram scene (temporal — for the locking protocol) ──
+   Three vertical lifelines (Client, Users, Orders), time flows down,
+   horizontal arrows are messages. Conventional UML-style sequence
+   diagram, drawn in a single SVG so message coordinates can be
+   precise. */
+
+.reveal .sequence-scene {
+  width: 100%;
+  height: 100%;
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.reveal .sequence-scene svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reveal .seq-lifeline {
+  stroke: var(--ink-black);
+  stroke-width: 2;
+  stroke-dasharray: 8 6;
+  fill: none;
+}
+
+.reveal .seq-head-circle {
+  stroke: var(--ink-black);
+  stroke-width: 4;
+}
+
+.reveal .seq-head-client    { fill: var(--sky-turquoise); }
+.reveal .seq-head-users     { fill: var(--terracotta); }
+.reveal .seq-head-orders    { fill: var(--sage); }
+
+.reveal .seq-head-label {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  fill: var(--adobe-cream);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.reveal .seq-msg-line {
+  stroke: var(--ink-black);
+  stroke-width: 3;
+  fill: none;
+}
+
+.reveal .seq-msg-label {
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 22px;
+  fill: var(--ink-black);
+  text-anchor: middle;
+}
+
+.reveal .seq-phase-label {
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--deep-rust);
+  text-anchor: start;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Code slide — for showing a block of code as the focal element.
+   Header at top, code block centered below. Monospace font, ink-black
+   text on adobe-cream, deep-rust for highlighted keywords. */
+
+.reveal .slides section.code-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .code-stack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 100px;
+  box-sizing: border-box;
+  gap: 30px;
+}
+
+.reveal .code-header {
+  flex: 0 0 auto;
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid var(--terracotta);
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .code-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.reveal .code-block {
+  font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+  font-size: 40px;
+  line-height: 1.5;
+  color: var(--ink-black);
+  background-color: var(--adobe-cream);
+  border: 3px solid var(--ink-black);
+  border-radius: 10px;
+  padding: 40px 60px;
+  margin: 0;
+  white-space: pre;
+}
+
+.reveal .code-block .code-keyword {
+  color: var(--deep-rust);
+  font-weight: 700;
+}
+
+/* Highlight a span of code (a part being pointed at). */
+.reveal .code-block .code-hl {
+  background-color: rgba(232, 184, 48, 0.5);
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px rgba(232, 184, 48, 0.5);
+}
+
+/* Bridge slide (image-only, full-bleed). */
+
+.reveal .slides section.bridge-slide {
+  height: 100%;
+}
+
+/* Big-statement slide (centered text, no image, no band). */
+
+.reveal .slides section.big-statement-slide {
+  height: 100%;
+  padding: 0;
+}
+
+.reveal .big-statement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3em;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  margin: 0;
+  padding: 0 80px;
+  box-sizing: border-box;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+.reveal .actor-prevents-portrait {
+  width: 600px;
+  height: 600px;
+  background: url('../images/actor-prevents.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .break-parts-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/break-parts.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .race-condition-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/race-condition.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .two-phase-locking-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/two-phase-locking.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .regions-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/regions.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .cowns-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/cowns.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .behaviours-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/behaviours.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .content-heading {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Oversized content heading — for short, punchy phrases that would
+   otherwise look lost in the text column next to their image. */
+.reveal .content-heading.is-big {
+  font-size: 3.2em;
+}
+
+.reveal .heading-accent {
+  color: var(--deep-rust);
+}
+
+/* Recap kicker — small uppercase tag above a brought-back slide's
+   heading, so the gift-parade slides read as "still true in BOC"
+   rather than as accidental backward navigation. */
+.reveal .recap-kicker {
+  color: var(--deep-rust);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+/* Reception pivot portraits — the final difference, in the standard
+   content-slide image+text format. */
+.reveal .reception-execute-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/reception-execute.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .reception-ticket-portrait {
+  width: 600px;
+  height: 600px;
+  background: var(--ochre) url('../images/reception-ticket.png') center/cover no-repeat;
+  border: 4px solid var(--ink-black);
+}
+
+.reveal .content-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reveal .content-list li {
+  color: var(--ink-black);
+  font-family: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.4em;
+  font-weight: 400;
+  margin: 0.7em 0;
+  padding-left: 1.5em;
+  position: relative;
+  line-height: 1.3;
+}
+
+.reveal .content-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.6em;
+  height: 0.6em;
+  background-color: var(--terracotta);
+  border-radius: 50%;
+}

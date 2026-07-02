@@ -1,0 +1,2114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On When Concurrency Matters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Cover slide -->
+      <section class="cover-slide" data-background-image="images/cover.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <h1 class="cover-title"><span class="cover-on">On</span> When Concurrency Matters</h1>
+      </section>
+
+      <!-- About me -->
+      <section class="about-slide" data-background-color="#e6d2a5">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 class="about-name">Sean T. Allen</h2>
+            <p class="about-url">www.seantallen.com</p>
+            <ul class="about-list">
+              <li>Distinguished Engineer @ Antithesis</li>
+              <li>Member of the Pony core team</li>
+              <li>High Plains Drifter</li>
+              <li>Reviewer #2</li>
+            </ul>
+          </div>
+          <div class="about-image">
+            <div class="about-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Topic intro -->
+      <section class="topic-slide" data-background-color="#5fa3b2">
+        <div class="topic-grid">
+          <div class="topic-text">
+            <h2 class="topic-heading"><span class="topic-on">On</span> When Concurrency Matters:<br>Behaviour-Oriented Concurrency</h2>
+          </div>
+          <div class="topic-image">
+            <div class="topic-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Talk about concurrency.</li>
+            <li>Talk about safe concurrency.</li>
+            <li>Talk about Pony quickly.</li>
+            <li>Talk about BOC quickly.</li>
+          </ul>
+          <p>But first, some history.</p>
+        </aside>
+      </section>
+
+      <!-- Talk-about-concurrency framing — image+text grid matching the
+           rhythm of the surrounding intro slides (About me, Topic intro,
+           Some History). Image (concurrency.png) is a placeholder for now. -->
+      <section class="concurrency-slide" data-background-color="#e6d2a5">
+        <div class="concurrency-grid">
+          <div class="concurrency-text">
+            <h2 class="concurrency-heading">A talk about<br><span class="heading-accent">concurrency</span></h2>
+          </div>
+          <div class="concurrency-image">
+            <div class="concurrency-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Sets up that the talk is about concurrency before "Some History" lands. The image carries the "many things happening at once" vibe so the audience reads the topic instantly. Eventual intro flow: concurrency &rarr; some history &rarr; MSR &rarr; Pony &rarr; ACID DB.</p>
+        </aside>
+      </section>
+
+      <!-- Some History -->
+      <section class="archaeology-slide" data-background-color="#e6d2a5">
+        <div class="archaeology-grid">
+          <div class="archaeology-text">
+            <h2 class="archaeology-heading">Some History</h2>
+          </div>
+          <div class="archaeology-image">
+            <div class="archaeology-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Matt Parkinson + Sylvan Clebsch conversations: "what would Pony need to be a good database language?"</li>
+            <li>That question led to BOC</li>
+            <li>BOC is being implemented in Verona (Microsoft)</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ACID DB framing — depicts the Matt/Sylvan conversation that led
+           to BOC, framing the talk's evaluation criterion: can Pony build
+           an ACID database? Image is the placeholder version of the
+           figures-at-a-chalkboard scene. -->
+      <section class="acid-db-slide" data-background-color="#e6d2a5">
+        <div class="acid-db-grid">
+          <div class="acid-db-text">
+            <h2 class="acid-db-heading">An <span class="heading-accent">ACID DB</span><br>in Pony</h2>
+          </div>
+          <div class="acid-db-image">
+            <div class="acid-db-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>This slide crystallizes the talk's evaluation criterion. The image depicts the Matt Parkinson / Sylvan Clebsch conversation at MSR about what Pony would need to be a good database language. The bar: ACID semantics. The rest of the talk evaluates actors (and then BOC) against that bar.</p>
+        </aside>
+      </section>
+
+      <!-- Section: The Actor Model -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">The Actor Model</h1>
+        <aside class="notes">
+          <ul>
+            <li>This is the Platonic actor model.</li>
+            <li>Real implementations can come up lacking.</li>
+            <li>Some violate properties we're about to discuss.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors pass messages -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">pass messages</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors message each other.</li>
+            <li>This is <em>asynchronous</em> &mdash; call it out, not everyone in the audience will assume it.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors protect resources -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">protect resources</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>files, sockets, data structures, etc.</p>
+        </aside>
+      </section>
+
+      <!-- Actors have private memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br><span class="heading-accent">own their memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors protect resources.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors combine behavior and memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors<br>combine <span class="heading-accent">behavior</span><br>and <span class="heading-accent">memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Combining behavior and memory makes them very OO-like.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- No globals -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">globals</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- No locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">locks</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- No shared state -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">shared state</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors allow sequential reasoning -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors allow<br><span class="heading-accent">sequential reasoning</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="sequential-reasoning-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>Actors process messages sequentially.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Actors scale horizontally -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors can<br><span class="heading-accent">scale horizontally</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actors-provide-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors are deadlock-free -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors are<br><span class="heading-accent">deadlock-free</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="deadlock-free-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actors provide data race freedom -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Actors provide<br><span class="heading-accent">data race freedom</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-prevents-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <ul>
+            <li>All variables are &ldquo;protected&rdquo; by an actor &mdash; no globals.</li>
+            <li>Processed sequentially, one message at a time.</li>
+            <li>Actors are &ldquo;synchronization operations&rdquo;.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Bridge image slide (image-only, talked over) -->
+      <section class="bridge-slide" data-background-image="images/bridge-shining-city.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <ul>
+            <li>Stay with what the actor model is good at and everything is wonderful.</li>
+            <li>But there are points of pain &mdash; places it won't help.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Section: Coordination Pain -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">Coordination Pain</h1>
+      </section>
+
+      <!-- Bridge image slide (image-only, what we want) -->
+      <section class="bridge-slide" data-background-image="images/bridge-one-operation.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <ul>
+            <li>The actor model conflates behavior and data &mdash; they're bound together in each actor.</li>
+            <li>What happens when you want one operation over more than one set of data?</li>
+            <li>You either normalize upfront so the data lives in one actor &mdash; or you jump through coordination hoops.</li>
+            <li>For most use cases, this doesn't matter.</li>
+            <li>For things like an ACID database, it does.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- Transition: what does it look like? -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">ACID</span> with Actors</h2>
+      </section>
+
+      <!-- Tables as actors — Frame 1: base, all three stations sitting there. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-stock">
+                <div class="actor-circle">Stock</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>three table actors: Users, Orders, Stock</p>
+        </aside>
+      </section>
+
+      <!-- Frame 2: strobe the Users circle — "this is the actor". -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle highlighted">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-stock">
+                <div class="actor-circle">Stock</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>name of table</p>
+        </aside>
+      </section>
+
+      <!-- Frame 3: strobe the Users table — "this is the data only the actor can touch". -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect highlighted"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-stock">
+                <div class="actor-circle">Stock</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>table data</p>
+        </aside>
+      </section>
+
+      <!-- Frame 4: highlight the whole Orders actor — "same pattern applies". -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle highlighted">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-stock">
+                <div class="actor-circle">Stock</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>name of table &mdash; same pattern, Orders</p>
+        </aside>
+      </section>
+
+      <!-- Frame 5: highlight the whole Stock actor — "and Stock too". -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Each table is <span class="heading-accent">an actor</span></h2>
+          <div class="diagram-area">
+            <div class="actor-stations">
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-orders">
+                <div class="actor-circle">Orders</div>
+                <div class="actor-rect"></div>
+              </div>
+              <div class="actor-station actor-stock">
+                <div class="actor-circle highlighted">Stock</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>name of table &mdash; same pattern, Stock</p>
+        </aside>
+      </section>
+
+      <!-- Single-table query (Users) — Frame 1: establish the world. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="query-scene">
+              <div class="client-circle">Client</div>
+              <div class="message-slot"></div>
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Client and Users actor</p>
+        </aside>
+      </section>
+
+      <!-- Frame 2: highlight Client. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="query-scene">
+              <div class="client-circle highlighted">Client</div>
+              <div class="message-slot"></div>
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>the client &mdash; the requestor</p>
+        </aside>
+      </section>
+
+      <!-- Frame 3: highlight Users. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="query-scene">
+              <div class="client-circle">Client</div>
+              <div class="message-slot"></div>
+              <div class="actor-station actor-users">
+                <div class="actor-circle highlighted">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>the actor &mdash; the only way to the table</p>
+        </aside>
+      </section>
+
+      <!-- Frame 4: looping conversation — query out, data back, repeat. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">simple</span> query</h2>
+          <div class="diagram-area">
+            <div class="query-scene">
+              <div class="client-circle">Client</div>
+              <div class="message-slot">
+                <div class="message-loop-stack">
+                  <div class="message-loop message-loop-query">
+                    <svg class="message-arrow-svg" viewBox="0 0 1000 24" preserveAspectRatio="none">
+                      <defs>
+                        <marker id="ah-r-uql" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                          <path class="arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                        </marker>
+                      </defs>
+                      <line class="arrow-line" x1="0" y1="12" x2="985" y2="12" marker-end="url(#ah-r-uql)" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="arrow-label arrow-label-code">SELECT * FROM users WHERE &hellip;</div>
+                  </div>
+                  <div class="message-loop message-loop-data">
+                    <svg class="message-arrow-svg" viewBox="0 0 1000 24" preserveAspectRatio="none">
+                      <defs>
+                        <marker id="ah-l-uql" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                          <path class="arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                        </marker>
+                      </defs>
+                      <line class="arrow-line" x1="1000" y1="12" x2="15" y2="12" marker-end="url(#ah-l-uql)" vector-effect="non-scaling-stroke"/>
+                    </svg>
+                    <div class="arrow-label arrow-label-code">[ &hellip; ]</div>
+                  </div>
+                </div>
+              </div>
+              <div class="actor-station actor-users">
+                <div class="actor-circle">Users</div>
+                <div class="actor-rect"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The conversation loops continuously. Outgoing arrow with a SQL-style request goes from the Client to the Users actor; then the request fades and an incoming arrow with bracketed result data returns. Repeat. The looping animation conveys the request/response pattern without committing to a specific query.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           A JOIN — naive triangular spatial layout
+           ================================================================ -->
+
+      <!-- JOIN Frame 1: establish — three entities sitting there (pure SVG). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <!-- Client (full size) -->
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <!-- Users actor (slim: table + circle) -->
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <!-- Orders actor (slim) -->
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Three entities: the Client circle (turquoise) on the left, the Users actor (terracotta) at the top right, and the Orders actor (sage) at the bottom right. The actors are drawn in a slimmed-down form &mdash; same iconography (circle = actor, rectangle = the table it owns), just smaller. The Client wants data that lives in two different actors &mdash; that's a JOIN.</p>
+        </aside>
+      </section>
+
+      <!-- JOIN Frame 2: Client → Users (one arrow, with inline SQL label). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-svg-2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="jsvg-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+              <!-- Arrow + label (Client → Users) -->
+              <line class="jsvg-arrow-line" x1="316" y1="369" x2="1225" y2="120" marker-end="url(#ah-svg-2)"/>
+              <rect class="jsvg-label-bg" x="555" y="227" width="430" height="34"/>
+              <text class="jsvg-label-text" x="770" y="244">SELECT * FROM users WHERE id=42</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The Client sends a single async message to the Users actor: a request for user 42. Once sent, the message is gone &mdash; this isn't a synchronous call held open waiting for a return value.</p>
+        </aside>
+      </section>
+
+      <!-- JOIN Frame 3: Client → Orders (first arrow gone). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-svg-3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="jsvg-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+              <!-- Arrow + label (Client → Orders) -->
+              <line class="jsvg-arrow-line" x1="318" y1="419" x2="1224" y2="568" marker-end="url(#ah-svg-3)"/>
+              <rect class="jsvg-label-bg" x="519" y="477" width="504" height="34"/>
+              <text class="jsvg-label-text" x="771" y="494">SELECT * FROM orders WHERE user_id=42</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The first message is gone &mdash; it has been delivered. The Client now sends a second, independent async message, this time to the Orders actor, asking for the orders that belong to user 42. Two separate sends, in some order, neither blocking the other.</p>
+        </aside>
+      </section>
+
+      <!-- JOIN Frame 4: Orders → Client (second message gone, response back, out-of-order). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-svg-4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="jsvg-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+              <!-- Arrow + label (Orders → Client, response) -->
+              <line class="jsvg-arrow-line" x1="1236" y1="570" x2="330" y2="421" marker-end="url(#ah-svg-4)"/>
+              <rect class="jsvg-label-bg" x="683" y="478" width="200" height="34"/>
+              <text class="jsvg-label-text" x="783" y="495">[ &hellip; orders &hellip; ]</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Time has passed. Orders responds first &mdash; before Users. Response order is not controlled by the sender; whichever actor finishes processing first sends back first. The Client now holds the Orders payload, but the Users response hasn't arrived.</p>
+        </aside>
+      </section>
+
+      <!-- JOIN Frame 5: Users → Client (Orders response gone, Users response arrives). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-svg-5" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="jsvg-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+              <!-- Arrow + label (Users → Client, response) -->
+              <line class="jsvg-arrow-line" x1="1237" y1="117" x2="328" y2="366" marker-end="url(#ah-svg-5)"/>
+              <rect class="jsvg-label-bg" x="647" y="224" width="270" height="34"/>
+              <text class="jsvg-label-text" x="782" y="241">{ id: 42, name: &hellip; }</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>More time passes. Users finally responds with the user record. The earlier Orders response is no longer on screen &mdash; it already happened. The Client is now holding both pieces, but they arrived as two separate events, at different times.</p>
+        </aside>
+      </section>
+
+      <!-- JOIN Frame 6: Both responses gone. Client combines locally (highlighted). -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">A <span class="heading-accent">naive</span> JOIN</h2>
+          <div class="diagram-area">
+            <svg class="join-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <circle class="jsvg-client" cx="200" cy="400" r="120"/>
+              <text class="jsvg-client-text" x="200" y="400">Client</text>
+              <!-- Highlight ring around Client (pulses via CSS animation) -->
+              <circle class="jsvg-highlight-ring" cx="200" cy="400" r="135"/>
+              <rect class="jsvg-table-bg" x="1245" y="180" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="200" x2="1355" y2="200"/>
+              <line class="jsvg-table-line" x1="1245" y1="220" x2="1355" y2="220"/>
+              <line class="jsvg-table-line" x1="1245" y1="240" x2="1355" y2="240"/>
+              <line class="jsvg-table-line" x1="1245" y1="260" x2="1355" y2="260"/>
+              <line class="jsvg-table-line" x1="1245" y1="280" x2="1355" y2="280"/>
+              <rect class="jsvg-stripe-users" x="1245" y="180" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="180" width="110" height="110"/>
+              <circle class="jsvg-users-circle" cx="1300" cy="100" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="100">Users</text>
+              <rect class="jsvg-table-bg" x="1245" y="660" width="110" height="110"/>
+              <line class="jsvg-table-line" x1="1245" y1="680" x2="1355" y2="680"/>
+              <line class="jsvg-table-line" x1="1245" y1="700" x2="1355" y2="700"/>
+              <line class="jsvg-table-line" x1="1245" y1="720" x2="1355" y2="720"/>
+              <line class="jsvg-table-line" x1="1245" y1="740" x2="1355" y2="740"/>
+              <line class="jsvg-table-line" x1="1245" y1="760" x2="1355" y2="760"/>
+              <rect class="jsvg-stripe-orders" x="1245" y="660" width="110" height="6"/>
+              <rect class="jsvg-table-border" x="1245" y="660" width="110" height="110"/>
+              <circle class="jsvg-orders-circle" cx="1300" cy="580" r="65"/>
+              <text class="jsvg-actor-text" x="1300" y="580">Orders</text>
+              <!-- "JOIN locally" label below the Client -->
+              <rect class="jsvg-label-bg" x="113" y="603" width="175" height="34"/>
+              <text class="jsvg-label-text" x="200" y="620">JOIN locally</text>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>No arrows on screen. The Client (highlighted with a pulsing ring) is doing the JOIN itself &mdash; combining the user record with the orders list locally, in code. There was no JOIN message; the actors didn't do it. The "JOIN" is whatever the Client decides to do with the two pieces it received over time.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           But it's not atomic — interleaving timelines
+           Setup the baseline, then walk through 3 scenarios where the
+           same JOIN under different message interleavings produces
+           different results. The point isn't "wrong value" — it's
+           "no isolation; same query → any answer."
+           ================================================================ -->
+
+      <!-- Setup statement 1: who is User 42 -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">User 42 is <span class="heading-accent">Alice</span></h2>
+        <aside class="notes">
+          <p>Setup the baseline. Before any interleaving, here's what's in the database. User 42 is Alice. Audience needs this anchor so they can evaluate "is the JOIN result right?" later.</p>
+        </aside>
+      </section>
+
+      <!-- Setup statement 2: how many orders -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">Alice has <span class="heading-accent">2 orders</span></h2>
+        <aside class="notes">
+          <p>Two orders. Now we know what a quiet JOIN should return: Alice plus those two orders.</p>
+        </aside>
+      </section>
+
+      <!-- ─── Scenario A: quiet system ───────────────────────────────── -->
+
+      <!-- A intro -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">No</span> other writers</h2>
+        <aside class="notes">
+          <p>First scenario. No one else writes to the database while our JOIN runs. The simplest interleaving.</p>
+        </aside>
+      </section>
+
+      <!-- A timeline frame 1: ring on read Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-a1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="400">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="400" x2="1400" y2="400" marker-end="url(#ah-tl-a1)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="400" r="32"/>
+              <text class="tl-dot-text" x="500" y="400">U</text>
+              <text class="tl-dot-label" x="500" y="470">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="400" r="32"/>
+              <text class="tl-dot-text" x="1200" y="400">O</text>
+              <text class="tl-dot-label" x="1200" y="470">read Orders</text>
+              <!-- Highlight: read Users -->
+              <circle class="tl-highlight" cx="500" cy="400" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Our Client reads Users first. No one else is writing.</p>
+        </aside>
+      </section>
+
+      <!-- A timeline frame 2: ring on read Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-a2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="400">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="400" x2="1400" y2="400" marker-end="url(#ah-tl-a2)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="400" r="32"/>
+              <text class="tl-dot-text" x="500" y="400">U</text>
+              <text class="tl-dot-label" x="500" y="470">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="400" r="32"/>
+              <text class="tl-dot-text" x="1200" y="400">O</text>
+              <text class="tl-dot-label" x="1200" y="470">read Orders</text>
+              <!-- Highlight: read Orders -->
+              <circle class="tl-highlight" cx="1200" cy="400" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Then our Client reads Orders. Still no one else writing. Both reads landed cleanly.</p>
+        </aside>
+      </section>
+
+      <!-- A result -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">JOIN result:<br>Alice + <span class="heading-accent">2 orders</span> &check;</h2>
+        <aside class="notes">
+          <p>Alice plus 2 orders. Matches the baseline. This is the answer the audience expected. Our isolation property held only because nothing else was happening.</p>
+        </aside>
+      </section>
+
+      <!-- ─── Scenario B: INSERT slips in ────────────────────────────── -->
+
+      <!-- B intro -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">A writer<br><span class="heading-accent">adds an order</span></h2>
+        <aside class="notes">
+          <p>Second scenario. While our JOIN is in flight, another client adds a new order to user 42's record. This isn't a fault &mdash; it's normal application traffic.</p>
+        </aside>
+      </section>
+
+      <!-- B timeline frame 1: ring on read Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-b1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-b1)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-b1)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">+</text>
+              <text class="tl-dot-label" x="850" y="590">INSERT order</text>
+              <!-- Highlight: read Users -->
+              <circle class="tl-highlight" cx="500" cy="280" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Our Client reads Users. At this point Users sees Alice. Order_C doesn't exist yet.</p>
+        </aside>
+      </section>
+
+      <!-- B timeline frame 2: ring on INSERT order -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-b2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-b2)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-b2)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">+</text>
+              <text class="tl-dot-label" x="850" y="590">INSERT order</text>
+              <!-- Highlight: INSERT -->
+              <circle class="tl-highlight" cx="850" cy="520" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>While our Client is between reads, a writer adds an order to the Orders table. We have no idea this happened.</p>
+        </aside>
+      </section>
+
+      <!-- B timeline frame 3: ring on read Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-b3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-b3)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-b3)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">+</text>
+              <text class="tl-dot-label" x="850" y="590">INSERT order</text>
+              <!-- Highlight: read Orders -->
+              <circle class="tl-highlight" cx="1200" cy="280" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Our Client reads Orders &mdash; and Orders now has 3 rows because the insert landed. Our snapshot has Users from before the insert and Orders from after. That's an incoherent snapshot.</p>
+        </aside>
+      </section>
+
+      <!-- B result -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">JOIN result:<br>Alice + <span class="heading-accent">3 orders</span></h2>
+        <aside class="notes">
+          <p>Alice plus 3 orders. Different from Scenario A. The key thing to call out: this isn't a snapshot of any single moment in the database's life. It's a stitched-together view that mixes pre-INSERT Users with post-INSERT Orders.</p>
+        </aside>
+      </section>
+
+      <!-- ─── Scenario C: DELETE slips in ────────────────────────────── -->
+
+      <!-- C intro -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">A writer<br><span class="heading-accent">deletes an order</span></h2>
+        <aside class="notes">
+          <p>Third scenario. Same setup, but this time the other client deletes one of the existing orders mid-JOIN.</p>
+        </aside>
+      </section>
+
+      <!-- C timeline frame 1: ring on read Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-c1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-c1)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-c1)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">&minus;</text>
+              <text class="tl-dot-label" x="850" y="590">DELETE order</text>
+              <!-- Highlight: read Users -->
+              <circle class="tl-highlight" cx="500" cy="280" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Our Client reads Users first. Both orders still exist at this point.</p>
+        </aside>
+      </section>
+
+      <!-- C timeline frame 2: ring on DELETE order -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-c2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-c2)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-c2)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">&minus;</text>
+              <text class="tl-dot-label" x="850" y="590">DELETE order</text>
+              <!-- Highlight: DELETE -->
+              <circle class="tl-highlight" cx="850" cy="520" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A writer deletes an order between our two reads. Again, our Client has no idea.</p>
+        </aside>
+      </section>
+
+      <!-- C timeline frame 3: ring on read Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">But the JOIN is <span class="heading-accent">not atomic</span></h2>
+          <div class="diagram-area">
+            <svg class="timeline-svg" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="ah-tl-c3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path class="tl-arrow-head" d="M0,0 L8,4 L0,8 Z"/>
+                </marker>
+              </defs>
+              <text class="tl-label" x="80" y="280">Our Client</text>
+              <line class="tl-arrow" x1="320" y1="280" x2="1400" y2="280" marker-end="url(#ah-tl-c3)"/>
+              <circle class="tl-dot tl-dot-client" cx="500" cy="280" r="32"/>
+              <text class="tl-dot-text" x="500" y="280">U</text>
+              <text class="tl-dot-label" x="500" y="350">read Users</text>
+              <circle class="tl-dot tl-dot-client" cx="1200" cy="280" r="32"/>
+              <text class="tl-dot-text" x="1200" y="280">O</text>
+              <text class="tl-dot-label" x="1200" y="350">read Orders</text>
+              <text class="tl-label" x="80" y="520">A writer</text>
+              <line class="tl-arrow" x1="320" y1="520" x2="1400" y2="520" marker-end="url(#ah-tl-c3)"/>
+              <circle class="tl-dot tl-dot-writer" cx="850" cy="520" r="32"/>
+              <text class="tl-dot-text" x="850" y="520">&minus;</text>
+              <text class="tl-dot-label" x="850" y="590">DELETE order</text>
+              <!-- Highlight: read Orders -->
+              <circle class="tl-highlight" cx="1200" cy="280" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Our Client reads Orders. Now Orders only has 1 row because an order was deleted. Snapshot stitches pre-delete Users with post-delete Orders. Different mismatch, same shape of problem.</p>
+        </aside>
+      </section>
+
+      <!-- C result -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">JOIN result:<br>Alice + <span class="heading-accent">1 order</span></h2>
+        <aside class="notes">
+          <p>Alice plus 1 order. A third different answer from the same query.</p>
+        </aside>
+      </section>
+
+      <!-- ─── Punchline ──────────────────────────────────────────────── -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">Same JOIN.</span><br>Three different answers.</h2>
+        <aside class="notes">
+          <p>Same JOIN, three different interleavings, three different answers. The Client cannot predict which one it will get on any given run. This is not "wrong value" &mdash; it's "no isolation." And these are gentle examples, just an order count off. With financial transfers, inventory decrements, scheduling, the gap between "answer the JOIN gave" and "what was actually true at any single moment" can spin out of control fast. That's why we need locks.</p>
+        </aside>
+      </section>
+
+      <!-- Race condition — names the problem, pivots into Locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading is-big">It's a <span class="heading-accent">race</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="race-condition-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Actors don't prevent race conditions. They killed data races &mdash; not this. The JOIN result depends on the interleaving: the timing of our reads against someone else's writes. To make it go away, we have to coordinate access.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           Section divider: we need locking
+           ================================================================ -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">Locks</h1>
+        <aside class="notes">
+          <p>Section divider. To make a JOIN atomic across multiple actors, we need to coordinate access &mdash; we need locks. Specifically, we need a distributed locking protocol because the data isn't in one place.</p>
+        </aside>
+      </section>
+
+      <!-- Two-phase locking intro — names the protocol before the diagram -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Two-phase<br><span class="heading-accent">locking</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="two-phase-locking-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Name the protocol before the diagram. Acquire all the locks, do the work, release them &mdash; a growing phase and a shrinking phase.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           Two-phase locking protocol — temporal/sequence-diagram view
+           Each frame adds one more message to the protocol.
+           ================================================================ -->
+
+      <!-- 2PL Frame 1: just the lifelines. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span></h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-r" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                  <marker id="ah-seq-l" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <!-- Lifelines (dashed vertical) -->
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <!-- Lifeline heads (entity circles) -->
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Sequence-diagram view. Three lifelines top to bottom: Client (turquoise) on the left, Users (terracotta) in the middle, Orders (sage) on the right. Time flows downward. Messages will appear as horizontal arrows between lifelines as the protocol unfolds.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 2: phase 1 starts — Client requests lock from Users. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-2" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <!-- Phase label -->
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <!-- Message 1: Client → Users LOCK -->
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-2)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The growing phase begins: acquire locks. The Client sends a LOCK request to the Users actor for this transaction (txn=42). Until the lock is granted and acknowledged, nothing else can read or write the Users table for this transaction's duration.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 3: Client also requests lock from Orders. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-3" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-3)"/>
+
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-3)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The Client also sends a LOCK request to Orders. Both requests are outstanding. The lock acquisition order (Users before Orders, alphabetical) is fixed across all clients to prevent deadlock &mdash; if every client locked in the same order, no two could be waiting on each other.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 4: Users grants the lock. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-4" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-4)"/>
+
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-4)"/>
+
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-4)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Users grants the lock and replies. The Client now holds the Users lock but is still waiting on Orders. It can't proceed yet &mdash; both locks must be held before any read happens, or the JOIN won't be atomic.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 5: Orders also grants the lock. End of phase 1. -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-5" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-5)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-5)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-5)"/>
+
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-5)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Orders also grants. Both locks held &mdash; the growing phase is done. Four messages just to get permission to read. Now the Client can finally do the actual JOIN work.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 6a: read phase — READ to Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-6a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-6a)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-6a)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-6a)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-6a)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-6a)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Now the work: read the data. READ to Users. The locks held through the growing phase keep the data stable while we read.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 6b: + READ to Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-6b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-6b)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-6b)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-6b)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-6b)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-6b)"/>
+                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-6b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>And READ to Orders. Both reads are out.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 7a: + data back from Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-7a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-7a)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-7a)"/>
+                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-7a)"/>
+
+                <text class="seq-msg-label" x="425" y="625">[ &hellip; ]</text>
+                <line class="seq-msg-line" x1="650" y1="645" x2="200" y2="645" marker-end="url(#ah-seq-7a)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Users returns its rows.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 7b: + data back from Orders — reads done -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; growing</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-7b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+                <text class="seq-phase-label" x="250" y="195">acquire</text>
+
+                <text class="seq-msg-label" x="425" y="220">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="290">LOCK(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="425" y="360">GRANTED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="430">GRANTED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-7b)"/>
+
+                <text class="seq-phase-label" x="250" y="500">read</text>
+                <text class="seq-msg-label" x="425" y="525">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="545" x2="650" y2="545" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="575">READ(SELECT&hellip;)</text>
+                <line class="seq-msg-line" x1="200" y1="595" x2="1100" y2="595" marker-end="url(#ah-seq-7b)"/>
+
+                <text class="seq-msg-label" x="425" y="625">[ &hellip; ]</text>
+                <line class="seq-msg-line" x1="650" y1="645" x2="200" y2="645" marker-end="url(#ah-seq-7b)"/>
+                <text class="seq-msg-label" x="650" y="675">[ &hellip; ]</text>
+                <line class="seq-msg-line" x1="1100" y1="695" x2="200" y2="695" marker-end="url(#ah-seq-7b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Orders returns its rows. Both in hand &mdash; but the locks are still held.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8a: shrinking — RELEASE to Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8a)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The shrinking phase begins: release locks. The Client sends RELEASE to Users. Once a lock is released it can't be re-taken &mdash; that's the shrinking discipline.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8b: + RELEASE to Orders -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8b" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8b)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8b)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>And RELEASE to Orders. Both release requests are out.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8c: + RELEASED from Users -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8c" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8c)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8c)"/>
+                <text class="seq-msg-label" x="425" y="360">RELEASED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-8c)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Users acknowledges: RELEASED. Its lock is free.</p>
+        </aside>
+      </section>
+
+      <!-- 2PL Frame 8d: + RELEASED from Orders — all four -->
+      <section class="diagram-slide" data-background-color="#e6d2a5">
+        <div class="diagram-stack">
+          <h2 class="diagram-header">Two-phase <span class="heading-accent">locking</span> &mdash; shrinking</h2>
+          <div class="diagram-area">
+            <div class="sequence-scene">
+              <svg viewBox="0 0 1300 800" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="ah-seq-8d" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+                    <path class="arrow-head" d="M0,0 L12,6 L0,12 Z"/>
+                  </marker>
+                </defs>
+                <line class="seq-lifeline" x1="200"  y1="120" x2="200"  y2="780"/>
+                <line class="seq-lifeline" x1="650"  y1="120" x2="650"  y2="780"/>
+                <line class="seq-lifeline" x1="1100" y1="120" x2="1100" y2="780"/>
+                <circle class="seq-head-circle seq-head-client" cx="200"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="200"  y="80">Client</text>
+                <circle class="seq-head-circle seq-head-users"  cx="650"  cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="650"  y="80">Users</text>
+                <circle class="seq-head-circle seq-head-orders" cx="1100" cy="80" r="55"/>
+                <text   class="seq-head-label"                  x="1100" y="80">Orders</text>
+
+                <text class="seq-phase-label" x="250" y="195">release</text>
+                <text class="seq-msg-label" x="425" y="220">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="240" x2="650" y2="240" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="650" y="290">RELEASE(txn=42)</text>
+                <line class="seq-msg-line" x1="200" y1="310" x2="1100" y2="310" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="425" y="360">RELEASED</text>
+                <line class="seq-msg-line" x1="650" y1="380" x2="200" y2="380" marker-end="url(#ah-seq-8d)"/>
+                <text class="seq-msg-label" x="650" y="430">RELEASED</text>
+                <line class="seq-msg-line" x1="1100" y1="450" x2="200" y2="450" marker-end="url(#ah-seq-8d)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Orders acknowledges: RELEASED. Both locks free &mdash; only now can anyone else touch these tables. Twelve messages, start to finish.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           The reckoning — count the messages
+           ================================================================ -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement"><span class="heading-accent">12 messages</span><br>for one JOIN.</h2>
+        <aside class="notes">
+          <p>Tally: 4 messages to acquire the locks, 4 to read the data, 4 to release the locks. Twelve messages of coordination noise around what was conceptually one query. And we haven't even talked about what happens if a lock holder crashes, or if the protocol picks the wrong order and deadlocks.</p>
+        </aside>
+      </section>
+
+      <!-- Full-screen burden image — the felt cost of hand-rolled locking,
+           talked over. Closes the pain section. Placeholder image. -->
+      <section class="bridge-slide" data-background-image="images/lock-burden.png" data-background-size="cover" data-background-position="center" data-background-color="#5fa3b2">
+        <aside class="notes">
+          <p>That's complex AND slow.</p>
+          <p>And it hands back one of the actor model's gifts: no locks. Now there's lock order to get right, and livelock is back on the table.</p>
+        </aside>
+      </section>
+
+      <!-- ================================================================
+           Behaviour-Oriented Concurrency. Divider opens on the dream
+           ("what if a JOIN looked like this?"), then explains how.
+           ================================================================ -->
+
+      <!-- Section divider: BOC -->
+      <section class="section-divider" data-background-color="#5fa3b2">
+        <h1 class="section-title">BOC</h1>
+        <aside class="notes">
+          <p>Section divider. Behaviour-Oriented Concurrency &mdash; or BOC for short, the abbreviation the audience will see for the rest of the talk. The deck title introduced the full term; this is where we start using it.</p>
+        </aside>
+      </section>
+
+      <!-- The `when` reveal — opens BOC on the dream -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">What if a JOIN could look like <span class="heading-accent">this</span>?</h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (users, orders) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The dream. The JOIN we just spent 12 messages of protocol on, written as one block. The <code>when</code> keyword takes the cowns it needs, the body runs with exclusive access to all of them, and the result drops out. No LOCK / GRANTED / READ / DATA / RELEASE / RELEASED choreography. How? By breaking the actor apart.</p>
+        </aside>
+      </section>
+
+      <!-- Thesis: break the actor into its parts (image-based) -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Break an actor<br><span class="heading-accent">into its parts</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="break-parts-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The thesis for the section. An actor bundles three things: its memory, who may touch that memory, and its execution. Binding them together is what turns a multi-actor atomic operation into a protocol. BOC separates them into three things &mdash; regions, cowns, and behaviours &mdash; and that separation is what lets one behaviour hold several at once, atomically.</p>
+        </aside>
+      </section>
+
+      <!-- Part 1: Regions — minimal, isolated memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Regions<br>are <span class="heading-accent">isolated memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="regions-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The first part. A region is an isolated region of memory &mdash; a chunk of the heap nothing else can reach into. That's all we need from it here.</p>
+        </aside>
+      </section>
+
+      <!-- Part 2: Cowns — rent a region -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">rent regions</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="cowns-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The second part. A cown rents a region. It's the unit you name in a <code>when</code>: hold the cown and you get its region for the length of the behaviour, then hand it back.</p>
+        </aside>
+      </section>
+
+      <!-- Behaviours intro — parallel format to the actor property slides -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours<br><span class="heading-accent">acquire</span> cowns</h2>
+          </div>
+          <div class="content-image">
+            <div class="behaviours-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Behaviours are the units of concurrent work. A behaviour names the cowns it needs, the runtime grants them atomically (all at once or not at all), the behaviour runs with exclusive access to all of them, then releases. This is how work happens in BOC.</p>
+        </aside>
+      </section>
+
+      <!-- Find the parts in the code: the behaviour -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">The <span class="heading-accent">behaviour</span></h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (users, orders) {
+<span class="code-hl">  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)</span>
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Back to the block we already saw &mdash; find the parts in it. The behaviour is the work: the body that runs once it has what it needs.</p>
+        </aside>
+      </section>
+
+      <!-- Find the parts in the code: the cowns -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">The <span class="heading-accent">cowns</span></h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (<span class="code-hl">users, orders</span>) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The cowns are what you name in the <code>when</code> &mdash; the resources the behaviour needs.</p>
+        </aside>
+      </section>
+
+      <!-- Atomic across cowns — on the code, both cowns held at once -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header"><span class="heading-accent">Atomic</span> across cowns</h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (<span class="code-hl">users</span>, <span class="code-hl">orders</span>) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The new thing actors can't do: one behaviour holds both cowns at once, atomically, with no protocol. Two cowns, one <code>when</code>. This is the piece that lets ACID fall out.</p>
+        </aside>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           Gift refrain — having claimed "actor gifts plus ACID" above,
+           back it up by bringing back every actor goodness slide BOC keeps,
+           relabeled with its BOC subject (Cowns / Behaviours). Ends on
+           "the one change". DRAFT for Sean to react to.
+           ════════════════════════════════════════════════════════════════ -->
+
+      <!-- Recap framing -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">What <span class="heading-accent">carries over</span>?</h2>
+        <aside class="notes">
+          <p>Sets up the recap. Everything that follows is a callback to the actor goodness slides from earlier &mdash; the point is that BOC keeps all of it. The "still true" tag on each slide tells a cold reader this is a recap, not backward navigation.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: cowns receive messages (brought over from "actors pass messages") -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">receive messages</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Cowns receive messages &mdash; each cown has a mailbox, same as an actor. The affordance carries over: you still send a message to reach the data. What changed is what receipt means &mdash; we come back to that at the end.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: protect resources -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">protect resources</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Cowns protect their contents &mdash; files, sockets, data structures &mdash; same as actors did.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: own their memory -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">rent their memory</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-basics-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A cown's memory is rented, not owned outright. A behaviour holds it for the length of its run, then gives it back. One tenant at a time.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: no globals -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">globals</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recap: no locks -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">locks</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>No user-visible locks. The runtime acquires cowns for you; you never write a lock.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: no shared state -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">No<br><span class="heading-accent">shared state</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="no-more-portrait"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recap: sequential reasoning -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours allow<br><span class="heading-accent">sequential reasoning</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="sequential-reasoning-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Inside a behaviour you reason sequentially &mdash; one step after another, with exclusive access to your cowns.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: scale horizontally -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours can<br><span class="heading-accent">scale horizontally</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actors-provide-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>Behaviours over disjoint cowns run in parallel &mdash; same horizontal scaling, finer-grained sharing.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: deadlock-free -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours are<br><span class="heading-accent">deadlock-free</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="deadlock-free-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A behaviour acquires all its cowns at once, up front. No partial-hold-and-wait, so no deadlock.</p>
+        </aside>
+      </section>
+
+      <!-- Recap: data race freedom -->
+      <section class="content-slide" data-background-color="#e6d2a5">
+        <div class="content-grid">
+          <div class="content-text">
+            <h2 class="content-heading">Behaviours provide<br><span class="heading-accent">data race freedom</span></h2>
+          </div>
+          <div class="content-image">
+            <div class="actor-prevents-portrait"></div>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>A behaviour has exclusive access to its cowns while it runs. No two behaviours touch the same memory at the same time.</p>
+        </aside>
+      </section>
+
+      <!-- The thesis, landing as the closer: actor gifts kept, plus ACID -->
+      <section class="big-statement-slide" data-background-color="#e6d2a5">
+        <h2 class="big-statement">Actor gifts.<br>Plus <span class="heading-accent">ACID</span>.</h2>
+        <aside class="notes">
+          <p>The closer. We kept the actor gifts &mdash; you just saw them, one by one &mdash; and added ACID. Not "an ACID DB in Pony" &mdash; BOC is Verona, not Pony &mdash; but the means to build an ACID database without giving up what the actor model gave us.</p>
+        </aside>
+      </section>
+
+      <!-- Closing slide -->
+      <section class="closing-slide" data-background-image="images/closing.png" data-background-size="cover" data-background-position="center" data-background-color="#e6d2a5">
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      flowchart: { useMaxWidth: false, htmlLabels: false, padding: 20 },
+      themeVariables: {
+        primaryColor: '#b8643c',
+        primaryTextColor: '#e6d2a5',
+        primaryBorderColor: '#1f1a14',
+        lineColor: '#1f1a14',
+        secondaryColor: '#5fa3b2',
+        tertiaryColor: '#c8a060',
+        background: '#e6d2a5',
+        mainBkg: '#b8643c',
+        fontSize: '32px'
+      }
+    });
+
+    Reveal.initialize({
+      hash: true,
+      width: 1920,
+      height: 1080,
+      margin: 0,
+      transition: 'none',
+      backgroundTransition: 'none',
+      plugins: [ RevealNotes ]
+    });
+
+    Reveal.on('ready', () => { mermaid.run(); });
+  </script>
+</body>
+</html>
