@@ -1796,7 +1796,7 @@
       <section class="content-slide" data-background-color="#e6d2a5">
         <div class="content-grid">
           <div class="content-text">
-            <h2 class="content-heading">Break the actor<br><span class="heading-accent">into its parts</span></h2>
+            <h2 class="content-heading">Break an actor<br><span class="heading-accent">into its parts</span></h2>
           </div>
           <div class="content-image">
             <div class="break-parts-portrait"></div>
@@ -1826,7 +1826,7 @@
       <section class="content-slide" data-background-color="#e6d2a5">
         <div class="content-grid">
           <div class="content-text">
-            <h2 class="content-heading">Cowns<br><span class="heading-accent">rent a region</span></h2>
+            <h2 class="content-heading">Cowns<br><span class="heading-accent">rent regions</span></h2>
           </div>
           <div class="content-image">
             <div class="cowns-portrait"></div>
@@ -1852,19 +1852,54 @@
         </aside>
       </section>
 
-      <!-- The new thing: atomic across cowns -->
-      <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement"><span class="heading-accent">Atomic</span> across cowns.</h2>
+      <!-- Find the parts in the code: the behaviour -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">The <span class="heading-accent">behaviour</span></h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (users, orders) {
+<span class="code-hl">  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)</span>
+}</pre>
+          </div>
+        </div>
         <aside class="notes">
-          <p>The new addition &mdash; the thing actors don't give you. A single behaviour holds multiple cowns at once, atomically, with no protocol. The missing piece that lets ACID semantics fall out.</p>
+          <p>Back to the block we already saw &mdash; find the parts in it. The behaviour is the work: the body that runs once it has what it needs.</p>
         </aside>
       </section>
 
-      <!-- The thesis, asserted up front; the refrain that follows backs it up -->
-      <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement">Actor gifts.<br>Plus <span class="heading-accent">ACID</span>.</h2>
+      <!-- Find the parts in the code: the cowns -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header">The <span class="heading-accent">cowns</span></h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (<span class="code-hl">users, orders</span>) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
         <aside class="notes">
-          <p>The thesis, stated up front. We kept the actor gifts and added ACID. The refrain that follows backs up the "actor gifts" half &mdash; here are the gifts, one by one. Not "an ACID DB in Pony" &mdash; BOC is Verona, not Pony &mdash; but the means to build an ACID database without giving up what the actor model gave us.</p>
+          <p>The cowns are what you name in the <code>when</code> &mdash; the resources the behaviour needs.</p>
+        </aside>
+      </section>
+
+      <!-- Atomic across cowns — on the code, both cowns held at once -->
+      <section class="code-slide" data-background-color="#e6d2a5">
+        <div class="code-stack">
+          <h2 class="code-header"><span class="heading-accent">Atomic</span> across cowns</h2>
+          <div class="code-area">
+            <pre class="code-block"><span class="code-keyword">when</span> (<span class="code-hl">users</span>, <span class="code-hl">orders</span>) {
+  let u = users.find(42)
+  let o = orders.where(u.id)
+  return JOIN(u, o)
+}</pre>
+          </div>
+        </div>
+        <aside class="notes">
+          <p>The new thing actors can't do: one behaviour holds both cowns at once, atomically, with no protocol. Two cowns, one <code>when</code>. This is the piece that lets ACID fall out.</p>
         </aside>
       </section>
 
@@ -2027,48 +2062,11 @@
         </aside>
       </section>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           DRAFT / DECISION PENDING — message-passing reframe (Sylvan's
-           framing). Pays off the word "behaviour" in the title. Keep the
-           compact version (this); defer the scheduling mechanics. Cut the
-           whole block if it runs long for 45 min.
-           ════════════════════════════════════════════════════════════════ -->
-
-      <!-- Pivot to the final difference, part 1: actor reception -->
-      <section class="content-slide" data-background-color="#e6d2a5">
-        <div class="content-grid">
-          <div class="content-text">
-            <h2 class="content-heading">Actor Model:<br>messaging is<br><span class="heading-accent">execution</span></h2>
-          </div>
-          <div class="content-image">
-            <div class="reception-execute-portrait"></div>
-          </div>
-        </div>
-        <aside class="notes">
-          <p>The full thing: message reception is execution in the actor model. Receiving a message and running are the same event &mdash; the actor executes the moment the message arrives.</p>
-        </aside>
-      </section>
-
-      <!-- Pivot to the final difference, part 2: BOC reception -->
-      <section class="content-slide" data-background-color="#e6d2a5">
-        <div class="content-grid">
-          <div class="content-text">
-            <h2 class="content-heading">BOC:<br>messaging is<br>a <span class="heading-accent">ticket</span> for execution</h2>
-          </div>
-          <div class="content-image">
-            <div class="reception-ticket-portrait"></div>
-          </div>
-        </div>
-        <aside class="notes">
-          <p>The full thing: message reception is a ticket for a cown to be used in an execution by a behaviour. The message doesn't run anything on its own &mdash; it claims the cown, and a behaviour later runs using that cown.</p>
-        </aside>
-      </section>
-
-      <!-- The behaviour is the executor — pays off the title -->
+      <!-- The thesis, landing as the closer: actor gifts kept, plus ACID -->
       <section class="big-statement-slide" data-background-color="#e6d2a5">
-        <h2 class="big-statement">The <span class="heading-accent">behaviour</span><br>is the executor.</h2>
+        <h2 class="big-statement">Actor gifts.<br>Plus <span class="heading-accent">ACID</span>.</h2>
         <aside class="notes">
-          <p>The title payoff. The thread moved out of the actor and into the behaviour. The behaviour is the logical thread now &mdash; it's what runs, holding its tickets until it can. The executor is the behaviour, not the actor. That's the "behaviour-oriented" in Behaviour-Oriented Concurrency. Defer the rest &mdash; how tickets get ordered, when a behaviour actually fires &mdash; that's a talk of its own.</p>
+          <p>The closer. We kept the actor gifts &mdash; you just saw them, one by one &mdash; and added ACID. Not "an ACID DB in Pony" &mdash; BOC is Verona, not Pony &mdash; but the means to build an ACID database without giving up what the actor model gave us.</p>
         </aside>
       </section>
 
