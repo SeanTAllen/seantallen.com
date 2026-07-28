@@ -33,3 +33,8 @@ This talk works through the BOC paper from OOPSLA 2023, by Cheeseman, Parkinson,
 * [Reference Capabilities for Flexible Memory Management](/papers/external/reference-capabilities.pdf)
 * [Deny Capabilities for Safe, Fast Actors](https://www.ponylang.io/media/papers/fast-cheap.pdf)
 * [Pony: Co-designing a Type System and a Runtime](https://www.ponylang.io/media/papers/codesigning.pdf)
+* [Software Transactional Memory (STM)](https://en.wikipedia.org/wiki/Software_transactional_memory)
+* [Java Remote Method Invocation (RMI)](https://en.wikipedia.org/wiki/Java_remote_method_invocation)
+* [Remote Direct Memory Access (RDMA)](https://en.wikipedia.org/wiki/Remote_direct_memory_access)
+* [Common Object Request Broker Architecture (CORBA)](https://en.wikipedia.org/wiki/Common_Object_Request_Broker_Architecture)
+* [Will Wilson on Swarm Testing (Papers We Love SF)](https://www.youtube.com/watch?v=wzfC7Q-xNik)
