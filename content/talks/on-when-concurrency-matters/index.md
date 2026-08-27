@@ -19,7 +19,7 @@ This talk works through the BOC paper from OOPSLA 2023, by Cheeseman, Parkinson,
 
 ## Versions of this talk
 
-* Papers We Love San Francisco - [Slides](/presentations/on-when-concurrency-matters/pwl-sf/)
+* Papers We Love San Francisco - [Slides](/presentations/on-when-concurrency-matters/pwl-sf/) | [Video](https://www.youtube.com/watch?v=TH8-CZ65CGc)
 
 ## Links
 
