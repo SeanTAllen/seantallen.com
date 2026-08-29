@@ -24,6 +24,7 @@ This talk works through the BOC paper from OOPSLA 2023, by Cheeseman, Parkinson,
 ## Links
 
 * [bocpy - a Python implementation of BOC](https://microsoft.github.io/bocpy/)
+* [Lock Free Multi Core Performance with Behavior Oriented Concurrency - Matt Johnson's PyCon talk on bocpy](https://www.youtube.com/watch?v=LytoGIXLYkY)
 * [Verona - the language BOC is being implemented in](https://github.com/sylvanc/verona-bc)
 * [Pony](https://www.ponylang.io/)
 
