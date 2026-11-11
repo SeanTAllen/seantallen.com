@@ -31,7 +31,7 @@ Gergely Orosz of the Pragmatic Engineer and I sat down and had an incredible cha
 * [Rust](https://www.rust-lang.org/)
 * [Erlang](https://www.erlang.org/)
 
-### More from me
+### Referenced in Interview
 
 * [GC Made Fast](https://www.seantallen.com/talks/gc-made-fast/)
 * [Go Slow to Go Fast](https://www.seantallen.com/posts/go-slow-to-go-fast/)
